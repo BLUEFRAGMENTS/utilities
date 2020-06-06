@@ -7,7 +7,7 @@ pool:
 name: 'Set dynamically from build task'
 
 variables:
-  solution: '**/*.sln'
+  solution: '**/Bluefragments.Utilities.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   version.MajorMinor: '5.0' # Manually adjust the version number as needed for semantic versioning. Revision is auto-incremented.
