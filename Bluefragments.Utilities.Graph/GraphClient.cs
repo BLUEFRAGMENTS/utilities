@@ -12,12 +12,12 @@ using Newtonsoft.Json.Linq;
 
 namespace Bluefragments.Utilities.Graph
 {
-    public class GraphHelper
+    public class GraphClient
     {
         private string token;
         private string graphEndpoint = "https://graph.microsoft.com/beta";
 
-        public GraphHelper(string token)
+        public GraphClient(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -28,7 +28,7 @@ namespace Bluefragments.Utilities.Graph
             Client = GetAuthenticatedClient(token);
         }
 
-        public GraphHelper(string clientId, string clientSecret, string tenant)
+        public GraphClient(string clientId, string clientSecret, string tenant)
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
