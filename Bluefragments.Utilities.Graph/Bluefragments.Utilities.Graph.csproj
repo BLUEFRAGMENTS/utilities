@@ -5,6 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>BLUEFRAGMENTS</Authors>
     <PackageProjectUrl>https://github.com/Bluefragments/utilities</PackageProjectUrl>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
