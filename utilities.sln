@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluefragments.Utilities", "Bluefragments.Utilities\Bluefragments.Utilities.csproj", "{122605E5-26AB-483D-82D7-A63BAB6A39C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluefragments.Utilities.Graph", "Bluefragments.Utilities.Graph\Bluefragments.Utilities.Graph\Bluefragments.Utilities.Graph.csproj", "{FFF01F5E-667F-4FEB-BBE4-26DB9B908551}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluefragments.Utilities.Graph", "Bluefragments.Utilities.Graph\Bluefragments.Utilities.Graph.csproj", "{EF1BA8AE-4A0E-4FBB-B805-7EF8649E39EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{122605E5-26AB-483D-82D7-A63BAB6A39C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{122605E5-26AB-483D-82D7-A63BAB6A39C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{122605E5-26AB-483D-82D7-A63BAB6A39C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFF01F5E-667F-4FEB-BBE4-26DB9B908551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFF01F5E-667F-4FEB-BBE4-26DB9B908551}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFF01F5E-667F-4FEB-BBE4-26DB9B908551}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFF01F5E-667F-4FEB-BBE4-26DB9B908551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1BA8AE-4A0E-4FBB-B805-7EF8649E39EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1BA8AE-4A0E-4FBB-B805-7EF8649E39EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1BA8AE-4A0E-4FBB-B805-7EF8649E39EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1BA8AE-4A0E-4FBB-B805-7EF8649E39EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
