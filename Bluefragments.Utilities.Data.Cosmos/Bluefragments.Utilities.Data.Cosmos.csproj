@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0</Version>
+    <Authors>BLUEFRAGMENTS</Authors>
+    <PackageProjectUrl>https://github.com/bluefragments/utilities</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
