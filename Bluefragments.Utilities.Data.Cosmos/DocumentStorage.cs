@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -56,7 +57,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             return result?.FirstOrDefault<T>();
         }
-        
+
         public async Task<T> GetItemAsync<T>(string id, string collection) where T : Y
         {
             return await GetItemAsync<T>((i => i.Id == id), collection);
@@ -69,7 +70,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             FeedIterator<T> setIterator = null;
 
             setIterator = container.GetItemLinqQueryable<T>()
-                .Where(basePredicate<T>())  
+                .Where(basePredicate<T>())
                 .Where(predicate)
                             .ToFeedIterator();
 
@@ -131,6 +132,13 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return result.Resource.Id;
         }
 
+        public async Task<string> UpsertItemAsync<T>(T item, string collection) where T : Y
+        {
+            var container = await GetContainerAsync(collection);
+            var result = await container.UpsertItemAsync(item);
+            return result?.Resource?.Id;
+        }
+
         public async Task DeleteItemAsync<T>(string id, string collection, string partitionKey)
         {
             var container = await GetContainerAsync(collection);
@@ -138,12 +146,77 @@ namespace Bluefragments.Utilities.Data.Cosmos
             var result = await container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey));
         }
 
-        protected virtual Expression<Func<T, bool>> basePredicate<T>() where T : Y 
+        public async Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        {
+            List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
+
+            Type type = typeof(T);
+            var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
+
+            var attributes = properties.Select(a => new { attr = (PartitionKeyAttribute[])a.GetCustomAttributes(typeof(PartitionKeyAttribute), false), property = a }).Where(a => a.attr.Any(pk => pk.IsPartitionKey)).ToList();
+
+            foreach (var document in documentsToWorkWith)
+            {
+                var partitionKey = attributes.FirstOrDefault().property.GetValue(document).ToString();
+                operations.Add(container.UpsertItemAsync(document, new PartitionKey(partitionKey)).CaptureOperationResponse(document));
+            }
+
+            return await ExecuteTasksAsync<T>(operations);
+        }
+
+        public async Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        {
+            List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
+
+            Type type = typeof(T);
+            var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
+
+            var attributes = properties.Select(a => new { attr = (PartitionKeyAttribute[])a.GetCustomAttributes(typeof(PartitionKeyAttribute), false), property = a }).Where(a => a.attr.Any(pk => pk.IsPartitionKey)).ToList();
+
+            foreach (var document in documentsToWorkWith)
+            {
+                var partitionKey = attributes.FirstOrDefault().property.GetValue(document).ToString();
+                operations.Add(container.CreateItemAsync(document, new PartitionKey(partitionKey)).CaptureOperationResponse(document));
+            }
+
+            return await ExecuteTasksAsync<T>(operations);
+        }
+
+        public async Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        {
+            var container = await GetContainerAsync(collection);
+
+            List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
+
+            foreach (var document in documentsToWorkWith)
+            {
+                operations.Add(container.DeleteItemAsync<T>(document.Id, new PartitionKey(document.Type)).CaptureOperationResponse(document));
+            }
+
+            return await ExecuteTasksAsync<T>(operations);
+        }
+
+        protected async Task<BulkOperationResponse<T>> ExecuteTasksAsync<T>(IReadOnlyList<Task<OperationResponse<T>>> tasks)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            await Task.WhenAll(tasks);
+            stopwatch.Stop();
+
+            return new BulkOperationResponse<T>()
+            {
+                TotalTimeTaken = stopwatch.Elapsed,
+                TotalRequestUnitsConsumed = tasks.Sum(task => task.Result.RequestUnitsConsumed),
+                SuccessfullDocuments = tasks.Count(task => task.Result.IsSuccessfull),
+                Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList()
+            };
+        }
+
+        protected virtual Expression<Func<T, bool>> basePredicate<T>() where T : Y
         {
             return (i => 1 == 1);
         }
-        
-        private async Task<Container> GetContainerAsync(string collection)
+
+        protected async Task<Container> GetContainerAsync(string collection)
         {
             if (string.IsNullOrEmpty(database) ||
                 string.IsNullOrEmpty(collection))
@@ -153,7 +226,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             var dbResponse = await client.CreateDatabaseIfNotExistsAsync(database);
 
-            return dbResponse.Database.GetContainer(collection);     
+            return dbResponse.Database.GetContainer(collection);
         }
     }
 }

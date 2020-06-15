@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
@@ -20,5 +21,11 @@ namespace Bluefragments.Utilities.Data.Cosmos
         Task<T> GetItemAsync<T>(string id, string collection) where T : Y;
 
         Task<string> UpdateItemAsync<T>(T item, string collection) where T : Y;
+
+        Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
+
+        Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
+
+        Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y;
     }
 }
