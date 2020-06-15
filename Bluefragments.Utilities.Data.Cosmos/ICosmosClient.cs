@@ -16,6 +16,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         Task<IEnumerable<T>> GetItemsAsync<T>(Expression<Func<T, bool>> predicate, string collection) where T : Y;
 
+        Task<IEnumerable<dynamic>> GetItemsAsync(string collection, string query);
+
         Task<T> GetItemAsync<T>(Expression<Func<T, bool>> predicate, string collection) where T : Y;
 
         Task<T> GetItemAsync<T>(string id, string collection) where T : Y;

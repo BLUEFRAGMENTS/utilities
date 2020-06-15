@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Bluefragments.Utilities.Extensions;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
+using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
@@ -101,6 +102,25 @@ namespace Bluefragments.Utilities.Data.Cosmos
                     {
                         results.Add(item);
                     }
+                }
+            }
+
+            return results;
+        }
+
+        public async Task<IEnumerable<dynamic>> GetItemsAsync(string collection, string query)
+        {
+            if (string.IsNullOrEmpty(collection)) throw new ArgumentNullException(nameof(collection));
+            var container = await GetContainerAsync(collection);
+
+            var setIterator = container.GetItemQueryIterator<dynamic>(query);
+
+            var results = new List<dynamic>();
+            while (setIterator.HasMoreResults)
+            {
+                foreach (var item in await setIterator.ReadNextAsync())
+                {
+                    results.Add(JsonConvert.SerializeObject(item));
                 }
             }
 
