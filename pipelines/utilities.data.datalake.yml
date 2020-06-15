@@ -7,7 +7,7 @@ pool:
 name: 'Set dynamically from build task'
 
 variables:
-  solution: '**/Bluefragments.Utilities.Data.Cosmos.csproj'
+  solution: '**/Bluefragments.Utilities.Data.DataLake.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   version.MajorMinor: '1.0' # Manually adjust the version number as needed for semantic versioning. Revision is auto-incremented.
