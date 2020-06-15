@@ -10,12 +10,12 @@ using Microsoft.Azure.Cosmos.Linq;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public class Storage<Y> : IClient<Y> where Y : DataEntity
+    public class CosmosClient<Y> : ICosmosClient<Y> where Y : DataEntity
     {
         private readonly string database;
         private readonly CosmosClient client;
 
-        public Storage(string database, string storageKey, string storageUrl)
+        public CosmosClient(string database, string storageKey, string storageUrl)
         {
             database.ThrowIfParameterIsNullOrWhiteSpace(nameof(database));
             storageKey.ThrowIfParameterIsNullOrWhiteSpace(nameof(storageKey));

@@ -9,9 +9,9 @@ using Bluefragments.Utilities.Extensions;
 
 namespace Bluefragments.Utilities.Data.DataLake
 {
-    public class Client : IClient
+    public class DataLakeClient : IDataLakeClient
     {
-        public Client(string storageAccountName, string storageAccountKey, string StorageAccountUri)
+        public DataLakeClient(string storageAccountName, string storageAccountKey, string StorageAccountUri)
         {
             SharedKeyCredential = new StorageSharedKeyCredential(storageAccountName, storageAccountKey);
             ServiceClient = new DataLakeServiceClient(new Uri(StorageAccountUri), SharedKeyCredential);

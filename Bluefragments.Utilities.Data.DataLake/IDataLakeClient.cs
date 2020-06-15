@@ -6,7 +6,7 @@ using Azure.Storage.Files.DataLake.Models;
 
 namespace Bluefragments.Utilities.Data.DataLake
 {
-    public interface IClient
+    public interface IDataLakeClient
     {
         public DataLakeServiceClient ServiceClient { get; }
 

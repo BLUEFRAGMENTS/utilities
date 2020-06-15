@@ -6,7 +6,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public interface IClient<Y>
+    public interface ICosmosClient<Y>
     {
         Task<T> GetFirstAsync<T>(Expression<Func<T, bool>> whereFunction, bool useOrderByDescending, Expression<Func<T, long>> orderByFunction, string collection) where T : Y;
 
