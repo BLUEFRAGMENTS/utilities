@@ -10,7 +10,7 @@ using Microsoft.Azure.Cosmos.Linq;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public class Storage<Y> : IDocumentStorage<Y> where Y : DataEntity
+    public class Storage<Y> : IClient<Y> where Y : DataEntity
     {
         private readonly string database;
         private readonly CosmosClient client;

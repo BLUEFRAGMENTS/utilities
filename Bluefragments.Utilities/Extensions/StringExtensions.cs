@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Bluefragments.Utilities.Extensions
 {
@@ -59,6 +60,16 @@ namespace Bluefragments.Utilities.Extensions
 		public static double FromBinaryToDecimal(this string binaryValue)
 		{
 			return Convert.ToDouble(Convert.ToString(Convert.ToInt64(binaryValue, 2), 10));
+		}
+
+		public static Stream ToStream(this string s)
+		{
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(s);
+			writer.Flush();
+			stream.Position = 0;
+			return stream;
 		}
 	}
 }
