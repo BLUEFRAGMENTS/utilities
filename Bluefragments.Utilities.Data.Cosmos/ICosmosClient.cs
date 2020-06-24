@@ -20,14 +20,14 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         Task<T> GetItemAsync<T>(Expression<Func<T, bool>> predicate, string collection) where T : Y;
 
-        Task<T> GetItemAsync<T>(string id, string collection) where T : Y;
+        Task<T> GetItemAsync<T>(object id, string collection) where T : Y;
 
-        Task<string> UpdateItemAsync<T>(T item, string collection) where T : Y;
+        Task<object> UpdateItemAsync<T>(T item, string collection) where T : Y;
 
         Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
 
         Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
 
-        Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y;
+        Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
     }
 }
