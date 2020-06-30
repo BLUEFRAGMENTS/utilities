@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public class CosmosClient<Y> : ICosmosClient<Y> where Y : DataEntity
+    public class CosmosClient<Y> : ICosmosClient<Y> where Y : ICosmosEntity
     {
         private readonly string database;
         private readonly CosmosClient client;
@@ -56,10 +56,10 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             var result = await setIterator.ReadNextAsync();
 
-            return result?.FirstOrDefault<T>();
+            return result.FirstOrDefault<T>();
         }
 
-        public async Task<T> GetItemAsync<T>(string id, string collection) where T : Y
+        public async Task<T> GetItemAsync<T>(object id, string collection) where T : Y
         {
             return await GetItemAsync<T>((i => i.Id == id), collection);
         }
@@ -77,7 +77,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             var result = await setIterator.ReadNextAsync();
 
-            return result?.FirstOrDefault<T>();
+            return result.FirstOrDefault<T>();
         }
 
         public async Task<IEnumerable<T>> GetItemsAsync<T>(string collection) where T : Y
@@ -127,7 +127,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return results;
         }
 
-        private async Task<string> CreateItemAsync<T>(T item, string collection) where T : Y
+        private async Task<object> CreateItemAsync<T>(T item, string collection) where T : Y
         {
             var container = await GetContainerAsync(collection);
             item.Id = Guid.NewGuid().ToString();
@@ -138,21 +138,21 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return created.Resource.Id;
         }
 
-        public async Task<string> UpdateItemAsync<T>(T item, string collection) where T : Y
+        public async Task<object> UpdateItemAsync<T>(T item, string collection) where T : Y
         {
-            if (string.IsNullOrEmpty(item.Id))
+            if (string.IsNullOrEmpty(item.Id.ToString()))
             {
                 return await CreateItemAsync<T>(item, collection);
             }
 
             var container = await GetContainerAsync(collection);
 
-            var result = await container.ReplaceItemAsync(item, item.Id);
+            var result = await container.ReplaceItemAsync(item, item.Id.ToString());
 
             return result.Resource.Id;
         }
 
-        public async Task<string> UpsertItemAsync<T>(T item, string collection) where T : Y
+        public async Task<object> UpsertItemAsync<T>(T item, string collection) where T : Y
         {
             var container = await GetContainerAsync(collection);
             var result = await container.UpsertItemAsync(item);
@@ -202,15 +202,18 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync<T>(operations);
         }
 
-        public async Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        public async Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
         {
-            var container = await GetContainerAsync(collection);
+            Type type = typeof(T);
+            var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
+            var attributes = properties.Select(a => new { attr = (PartitionKeyAttribute[])a.GetCustomAttributes(typeof(PartitionKeyAttribute), false), property = a }).Where(a => a.attr.Any(pk => pk.IsPartitionKey)).ToList();
 
             List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
 
             foreach (var document in documentsToWorkWith)
             {
-                operations.Add(container.DeleteItemAsync<T>(document.Id, new PartitionKey(document.Type)).CaptureOperationResponse(document));
+                var partitionKey = attributes.FirstOrDefault().property.GetValue(document).ToString();
+                operations.Add(container.DeleteItemAsync<T>(document.Id.ToString(), new PartitionKey(partitionKey)).CaptureOperationResponse(document));
             }
 
             return await ExecuteTasksAsync<T>(operations);

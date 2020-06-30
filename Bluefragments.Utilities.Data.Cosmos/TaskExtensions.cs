@@ -42,5 +42,41 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 };
             });
         }
+
+        public static Task<OperationResponse<T>> CaptureOperationResponse<T>(this Task<ResponseMessage> task, T item)
+        {
+            return task.ContinueWith(itemResponse =>
+            {
+                if (itemResponse.IsCompletedSuccessfully)
+                {
+                    return new OperationResponse<T>()
+                    {
+                        Item = item,
+                        IsSuccessfull = true,
+                        //RequestUnitsConsumed = task.Result.RequestCharge
+                    };
+                }
+
+                AggregateException innerExceptions = itemResponse.Exception.Flatten();
+                CosmosException cosmosException = innerExceptions.InnerExceptions.FirstOrDefault(innerEx => innerEx is CosmosException) as CosmosException;
+                if (cosmosException != null)
+                {
+                    return new OperationResponse<T>()
+                    {
+                        Item = item,
+                        RequestUnitsConsumed = cosmosException.RequestCharge,
+                        IsSuccessfull = false,
+                        CosmosException = cosmosException
+                    };
+                }
+
+                return new OperationResponse<T>()
+                {
+                    Item = item,
+                    IsSuccessfull = false,
+                    CosmosException = innerExceptions.InnerExceptions.FirstOrDefault()
+                };
+            });
+        }
     }
 }
