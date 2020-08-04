@@ -140,7 +140,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         public async Task<object> UpdateItemAsync<T>(T item, string collection) where T : Y
         {
-            if (string.IsNullOrEmpty(item.Id.ToString()))
+            if (string.IsNullOrEmpty(item.Id?.ToString()))
             {
                 return await CreateItemAsync<T>(item, collection);
             }
