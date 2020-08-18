@@ -1,8 +1,6 @@
-﻿using System;
-namespace Bluefragments.Utilities.Data.Cosmos
+﻿namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public interface ICosmosEntity
+    public interface ICosmosEntity : ICosmosEntityBase<object>
     {
-        object Id { get; set; }
     }
 }
