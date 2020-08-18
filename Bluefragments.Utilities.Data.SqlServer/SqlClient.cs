@@ -25,6 +25,19 @@ namespace Bluefragments.Utilities.Data.SqlServer
             });
         }
 
+        public DbSet<T> Set<T>()
+            where T : SqlDataEntity
+        {
+            return context.Set<T>();
+        }
+
+        public async Task<List<T>> ExecuteQueryAsync<T>(string query, params object[] parameters)
+            where T : SqlDataEntity
+        {
+            var set = Set<T>();
+            return await set.FromSqlRaw(query, parameters).ToListAsync();
+        }
+
         public async Task CreateItemAsync<T>(T entity)
             where T : SqlDataEntity
         {
@@ -42,6 +55,13 @@ namespace Bluefragments.Utilities.Data.SqlServer
         {
             var set = context.Set<T>();
             return await set.ToListAsync();
+        }
+
+        public async Task<T> GetItemAsync<T>(Expression<Func<T, bool>> expression)
+            where T : SqlDataEntity
+        {
+            var set = context.Set<T>();
+            return await set.SingleOrDefaultAsync(expression);
         }
 
         public async Task<List<T>> GetItemsAsync<T>(Expression<Func<T, bool>> expression)
