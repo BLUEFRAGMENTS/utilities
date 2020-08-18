@@ -5,20 +5,25 @@ using Xunit;
 
 namespace Bluefragments.Utilities.Data.SqlServer.Tests
 {
-    public partial class SqlClientTests
+    public class SqlClientTests : IDisposable
     {
         private readonly SqlClient client;
+        private readonly TestDatabaseContext context;
 
         public SqlClientTests()
         {
             var optionsBuilder = new DbContextOptionsBuilder<TestDatabaseContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+                .UseSqlServer($"Server=(local); Database={Guid.NewGuid().ToString()}; Trusted_connection=true");
 
-            var context = new TestDatabaseContext(optionsBuilder.Options);
-            context.Database.EnsureDeleted();
+            context = new TestDatabaseContext(optionsBuilder.Options);
             context.Database.EnsureCreated();
 
             client = new SqlClient(context);
+        }
+
+        public void Dispose()
+        {
+            context.Database.EnsureDeleted();
         }
 
         [Fact]
@@ -179,6 +184,27 @@ namespace Bluefragments.Utilities.Data.SqlServer.Tests
             Assert.NotNull(result);
             Assert.NotEmpty(result);
             Assert.Single(result);
+        }
+
+        [Fact]
+        public async Task ExecuteQueryAsync_ReturnsAllItems()
+        {
+            using (var tx = client.CreateTransactionScope())
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    var entity = new TestEntity();
+                    entity.Text = i.ToString();
+                    entity.Id = Guid.NewGuid().ToString();
+
+                    await client.CreateItemAsync(entity);
+                }
+            }
+
+            var result = await client.ExecuteQueryAsync<TestEntity>("SELECT * FROM Tests");
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }
