@@ -54,7 +54,6 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 setIterator = setIterator.OrderBy(orderByFunction);
             }
 
-
             var result = await setIterator.ToFeedIterator().ReadNextAsync();
             return result.FirstOrDefault();
         }
@@ -83,7 +82,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(string collection)
             where TEntity : TBaseEntity
         {
-            return await GetItemsAsync<TEntity>((i => true), collection);
+            return await GetItemsAsync<TEntity>(i => true, collection);
         }
 
         public async Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, string collection)
@@ -114,7 +113,10 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<IEnumerable<dynamic>> GetItemsAsync(string collection, string query)
         {
             if (string.IsNullOrEmpty(collection))
+            {
                 throw new ArgumentNullException(nameof(collection));
+            }
+
             var container = await GetContainerAsync(collection);
 
             var setIterator = container.GetItemQueryIterator<dynamic>(query);
@@ -226,16 +228,15 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 TotalTimeTaken = stopwatch.Elapsed,
                 TotalRequestUnitsConsumed = tasks.Sum(task => task.Result.RequestUnitsConsumed),
                 SuccessfullDocuments = tasks.Count(task => task.Result.IsSuccessfull),
-                Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList()
+                Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList(),
             };
         }
 
         protected virtual Expression<Func<TEntity, bool>> BasePredicate<TEntity>()
             where TEntity : TBaseEntity
         {
-            return (i => true);
+            return i => true;
         }
-
 
         protected async Task<Container> GetContainerAsync(string collection)
         {
@@ -245,9 +246,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 throw new Exception("database parameters not valid");
             }
 
-            var dbResponse = await client.CreateDatabaseIfNotExistsAsync(database);
-
-            return dbResponse.Database.GetContainer(collection);
+            var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(database);
+            return databaseResponse.Database.GetContainer(collection);
         }
 
         private async Task<TId> CreateItemAsync(TBaseEntity item, string collection)
@@ -264,4 +264,3 @@ namespace Bluefragments.Utilities.Data.Cosmos
         }
     }
 }
-
