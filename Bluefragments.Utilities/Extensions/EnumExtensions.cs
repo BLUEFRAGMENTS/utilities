@@ -17,7 +17,9 @@ namespace Bluefragments.Utilities.Extensions
                 object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                 if (attrs != null && attrs.Length > 0)
+                {
                     return ((DescriptionAttribute)attrs[0]).Description;
+                }
             }
 
             return en.ToString();

@@ -2,13 +2,13 @@
 
 namespace Bluefragments.Utilities.Extensions
 {
-	public static class NumericExtensions
-	{
-		public static DateTime FromEpochTimeToUtcSeconds(this long unixTime)
-		{
-			var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-			return epoch.AddSeconds(unixTime);
-		}
+    public static class NumericExtensions
+    {
+        public static DateTime FromEpochTimeToUtcSeconds(this long unixTime)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return epoch.AddSeconds(unixTime);
+        }
 
         public static DateTime FromEpochTimeToUtcMiliseconds(this long unixTime)
         {
@@ -24,25 +24,33 @@ namespace Bluefragments.Utilities.Extensions
             {
                 return epoch.AddSeconds(value);
             }
-            catch { }
+            catch
+            {
+            }
 
             try
             {
                 return epoch.AddMilliseconds(value);
             }
-            catch { }
+            catch
+            {
+            }
 
             try
             {
                 return epoch.AddMilliseconds(value / 1000);
             }
-            catch { }
+            catch
+            {
+            }
 
             try
             {
                 return DateTime.FromFileTimeUtc(value);
             }
-            catch { }
+            catch
+            {
+            }
 
             return DateTime.MinValue;
         }

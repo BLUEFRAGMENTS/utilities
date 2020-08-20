@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Bluefragments.Utilities.Data.Cosmos
 {
     public interface ICosmosEntity

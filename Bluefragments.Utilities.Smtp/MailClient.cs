@@ -26,9 +26,18 @@ namespace Bluefragments.Utilities.Smtp
             this.fromEmail = fromEmail;
         }
 
+        public static byte[] ReadAttachment(Stream input)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
         public async Task<bool> SendMailAsync(HttpClient httpClient, string receivers, string subject, string body, byte[] attachment = null, string attachmentName = null)
         {
-            if(string.IsNullOrEmpty(receivers))
+            if (string.IsNullOrEmpty(receivers))
             {
                 throw new ArgumentNullException(nameof(receivers));
             }
@@ -64,16 +73,7 @@ namespace Bluefragments.Utilities.Smtp
             }
 
             var response = await client.SendEmailAsync(message);
-            return (response.StatusCode == System.Net.HttpStatusCode.OK || response.StatusCode == System.Net.HttpStatusCode.Accepted);
-        }
-
-        public static byte[] ReadAttachment(Stream input)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
+            return response.StatusCode == System.Net.HttpStatusCode.OK || response.StatusCode == System.Net.HttpStatusCode.Accepted;
         }
     }
 }

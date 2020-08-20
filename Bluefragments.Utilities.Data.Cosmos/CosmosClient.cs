@@ -11,7 +11,8 @@ using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public class CosmosClient<Y> : ICosmosClient<Y> where Y : ICosmosEntity
+    public class CosmosClient<TY> : ICosmosClient<TY>
+        where TY : ICosmosEntity
     {
         private readonly string database;
         private readonly CosmosClient client;
@@ -30,7 +31,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             client = new CosmosClient(endpointUrl, authorizationKey, options);
         }
 
-        public async Task<T> GetFirstAsync<T>(Expression<Func<T, bool>> whereFunction, bool useOrderByDescending, Expression<Func<T, long>> orderByFunction, string collection) where T : Y
+        public async Task<T> GetFirstAsync<T>(Expression<Func<T, bool>> whereFunction, bool useOrderByDescending, Expression<Func<T, long>> orderByFunction, string collection)
+            where T : TY
         {
             var container = await GetContainerAsync(collection);
 
@@ -40,7 +42,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             if (useOrderByDescending)
             {
                 setIterator = container.GetItemLinqQueryable<T>()
-                    .Where(basePredicate<T>())
+                    .Where(BasePredicate<T>())
                     .Where(whereFunction)
                                 .OrderByDescending(orderByFunction)
                                 .ToFeedIterator();
@@ -48,7 +50,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             else
             {
                 setIterator = container.GetItemLinqQueryable<T>()
-                    .Where(basePredicate<T>())
+                    .Where(BasePredicate<T>())
                     .Where(whereFunction)
                                     .OrderBy(orderByFunction)
                                     .ToFeedIterator();
@@ -59,19 +61,21 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return result.FirstOrDefault<T>();
         }
 
-        public async Task<T> GetItemAsync<T>(object id, string collection) where T : Y
+        public async Task<T> GetItemAsync<T>(object id, string collection)
+            where T : TY
         {
-            return await GetItemAsync<T>((i => i.Id == id), collection);
+            return await GetItemAsync<T>(i => i.Id == id, collection);
         }
 
-        public async Task<T> GetItemAsync<T>(Expression<Func<T, bool>> predicate, string collection) where T : Y
+        public async Task<T> GetItemAsync<T>(Expression<Func<T, bool>> predicate, string collection)
+            where T : TY
         {
             var container = await GetContainerAsync(collection);
 
             FeedIterator<T> setIterator = null;
 
             setIterator = container.GetItemLinqQueryable<T>()
-                .Where(basePredicate<T>())
+                .Where(BasePredicate<T>())
                 .Where(predicate)
                             .ToFeedIterator();
 
@@ -80,21 +84,24 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return result.FirstOrDefault<T>();
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync<T>(string collection) where T : Y
+        public async Task<IEnumerable<T>> GetItemsAsync<T>(string collection)
+            where T : TY
         {
-            return await GetItemsAsync<T>((i => 1 == 1), collection);
+            return await GetItemsAsync<T>(i => 1 == 1, collection);
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync<T>(Expression<Func<T, bool>> predicate, string collection) where T : Y
+        public async Task<IEnumerable<T>> GetItemsAsync<T>(Expression<Func<T, bool>> predicate, string collection)
+            where T : TY
         {
             var container = await GetContainerAsync(collection);
             var setIterator = container.GetItemLinqQueryable<T>()
-                .Where(basePredicate<T>())
+                .Where(BasePredicate<T>())
                 .Where(predicate)
                 .ToFeedIterator();
 
             List<T> results = new List<T>();
-            //Asynchronous query execution
+
+            // Asynchronous query execution
             while (setIterator.HasMoreResults)
             {
                 foreach (var item in await setIterator.ReadNextAsync())
@@ -110,7 +117,11 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         public async Task<IEnumerable<dynamic>> GetItemsAsync(string collection, string query)
         {
-            if (string.IsNullOrEmpty(collection)) throw new ArgumentNullException(nameof(collection));
+            if (string.IsNullOrEmpty(collection))
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
             var container = await GetContainerAsync(collection);
 
             var setIterator = container.GetItemQueryIterator<dynamic>(query);
@@ -127,18 +138,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return results;
         }
 
-        private async Task<object> CreateItemAsync<T>(T item, string collection) where T : Y
-        {
-            var container = await GetContainerAsync(collection);
-            item.Id = Guid.NewGuid().ToString();
-
-            var response = await container.CreateItemAsync(item);
-            var created = response;
-
-            return created.Resource.Id;
-        }
-
-        public async Task<object> UpdateItemAsync<T>(T item, string collection) where T : Y
+        public async Task<object> UpdateItemAsync<T>(T item, string collection)
+            where T : TY
         {
             if (string.IsNullOrEmpty(item.Id?.ToString()))
             {
@@ -152,7 +153,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return result.Resource.Id;
         }
 
-        public async Task<object> UpsertItemAsync<T>(T item, string collection) where T : Y
+        public async Task<object> UpsertItemAsync<T>(T item, string collection)
+            where T : TY
         {
             var container = await GetContainerAsync(collection);
             var result = await container.UpsertItemAsync(item);
@@ -166,7 +168,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             var result = await container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey));
         }
 
-        public async Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        public async Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith)
+            where T : TY
         {
             List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
 
@@ -184,7 +187,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync<T>(operations);
         }
 
-        public async Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        public async Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith)
+            where T : TY
         {
             List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
 
@@ -202,7 +206,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync<T>(operations);
         }
 
-        public async Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        public async Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith)
+            where T : TY
         {
             Type type = typeof(T);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
@@ -230,13 +235,14 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 TotalTimeTaken = stopwatch.Elapsed,
                 TotalRequestUnitsConsumed = tasks.Sum(task => task.Result.RequestUnitsConsumed),
                 SuccessfullDocuments = tasks.Count(task => task.Result.IsSuccessfull),
-                Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList()
+                Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList(),
             };
         }
 
-        protected virtual Expression<Func<T, bool>> basePredicate<T>() where T : Y
+        protected virtual Expression<Func<T, bool>> BasePredicate<T>()
+            where T : TY
         {
-            return (i => 1 == 1);
+            return i => 1 == 1;
         }
 
         protected async Task<Container> GetContainerAsync(string collection)
@@ -247,10 +253,21 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 throw new Exception("database parameters not valid");
             }
 
-            var dbResponse = await client.CreateDatabaseIfNotExistsAsync(database);
+            var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(database);
 
-            return dbResponse.Database.GetContainer(collection);
+            return databaseResponse.Database.GetContainer(collection);
+        }
+
+        private async Task<object> CreateItemAsync<T>(T item, string collection)
+            where T : TY
+        {
+            var container = await GetContainerAsync(collection);
+            item.Id = Guid.NewGuid().ToString();
+
+            var response = await container.CreateItemAsync(item);
+            var created = response;
+
+            return created.Resource.Id;
         }
     }
 }
-
