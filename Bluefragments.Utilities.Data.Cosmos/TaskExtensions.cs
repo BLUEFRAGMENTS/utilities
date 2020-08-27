@@ -17,7 +17,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                     {
                         Item = item,
                         IsSuccessfull = true,
-                        RequestUnitsConsumed = task.Result.RequestCharge
+                        RequestUnitsConsumed = task.Result.RequestCharge,
                     };
                 }
 
@@ -30,7 +30,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                         Item = item,
                         RequestUnitsConsumed = cosmosException.RequestCharge,
                         IsSuccessfull = false,
-                        CosmosException = cosmosException
+                        CosmosException = cosmosException,
                     };
                 }
 
@@ -38,7 +38,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 {
                     Item = item,
                     IsSuccessfull = false,
-                    CosmosException = innerExceptions.InnerExceptions.FirstOrDefault()
+                    CosmosException = innerExceptions.InnerExceptions.FirstOrDefault(),
                 };
             });
         }
@@ -53,7 +53,6 @@ namespace Bluefragments.Utilities.Data.Cosmos
                     {
                         Item = item,
                         IsSuccessfull = true,
-                        //RequestUnitsConsumed = task.Result.RequestCharge
                     };
                 }
 
@@ -66,7 +65,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                         Item = item,
                         RequestUnitsConsumed = cosmosException.RequestCharge,
                         IsSuccessfull = false,
-                        CosmosException = cosmosException
+                        CosmosException = cosmosException,
                     };
                 }
 
@@ -74,7 +73,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 {
                     Item = item,
                     IsSuccessfull = false,
-                    CosmosException = innerExceptions.InnerExceptions.FirstOrDefault()
+                    CosmosException = innerExceptions.InnerExceptions.FirstOrDefault(),
                 };
             });
         }
