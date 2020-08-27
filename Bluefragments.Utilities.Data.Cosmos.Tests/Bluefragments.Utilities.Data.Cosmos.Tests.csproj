@@ -2,19 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
-    <Authors>BLUEFRAGMENTS</Authors>
-    <PackageProjectUrl>https://github.com/bluefragments/utilities</PackageProjectUrl>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>Bluefragments.Utilities.Data.Cosmos.Tests-7c131724-b197-444c-854c-36903e133dbf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.9.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bluefragments.Utilities\Bluefragments.Utilities.csproj" />
+    <ProjectReference Include="..\Bluefragments.Utilities.Data.Cosmos\Bluefragments.Utilities.Data.Cosmos.csproj" />
   </ItemGroup>
 
   <ItemGroup>

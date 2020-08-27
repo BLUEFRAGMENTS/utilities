@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Bluefragments.Utilities.Extensions
@@ -70,6 +71,13 @@ namespace Bluefragments.Utilities.Extensions
 			writer.Flush();
 			stream.Position = 0;
 			return stream;
+		}
+
+		public static long ToEpochTimeSeconds(this string dateTime, DateTimeStyles dateTimeStyles = DateTimeStyles.RoundtripKind)
+		{
+			var newDateTime = DateTime.Parse(dateTime, null, dateTimeStyles);
+
+			return newDateTime.ToEpochTimeSeconds();
 		}
 	}
 }
