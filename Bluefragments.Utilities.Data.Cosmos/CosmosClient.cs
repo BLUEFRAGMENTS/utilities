@@ -166,9 +166,11 @@ namespace Bluefragments.Utilities.Data.Cosmos
             var result = await container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey));
         }
 
-        public async Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        public async Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y
         {
             List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
+
+            var container = await GetContainerAsync(collection);
 
             Type type = typeof(T);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
@@ -184,9 +186,11 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync<T>(operations);
         }
 
-        public async Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y
+        public async Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y
         {
             List<Task<OperationResponse<T>>> operations = new List<Task<OperationResponse<T>>>(documentsToWorkWith.Count);
+
+            var container = await GetContainerAsync(collection);
 
             Type type = typeof(T);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));

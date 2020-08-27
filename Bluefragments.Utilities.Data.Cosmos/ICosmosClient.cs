@@ -24,9 +24,9 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         Task<string> UpdateItemAsync<T>(T item, string collection) where T : Y;
 
-        Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
+        Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y;
 
-        Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith) where T : Y;
+        Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y;
 
         Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(string collection, IReadOnlyList<T> documentsToWorkWith) where T : Y;
     }
