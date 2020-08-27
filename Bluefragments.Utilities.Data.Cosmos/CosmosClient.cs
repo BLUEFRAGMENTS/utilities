@@ -161,10 +161,12 @@ namespace Bluefragments.Utilities.Data.Cosmos
             _ = await container.DeleteItemAsync<TBaseEntity>(id, new PartitionKey(partitionKey));
         }
 
-        public async Task<BulkOperationResponse<TEntity>> UpsertConcurrentlyAsync<TEntity>(Container container, IReadOnlyList<TEntity> documentsToWorkWith)
+        public async Task<BulkOperationResponse<TEntity>> UpsertConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity
         {
             var operations = new List<Task<OperationResponse<TEntity>>>(documentsToWorkWith.Count);
+
+            var container = await GetContainerAsync(collection);
 
             var type = typeof(TEntity);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
@@ -180,10 +182,12 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync(operations);
         }
 
-        public async Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(Container container, IReadOnlyList<TEntity> documentsToWorkWith)
+        public async Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity
         {
             var operations = new List<Task<OperationResponse<TEntity>>>(documentsToWorkWith.Count);
+
+            var container = await GetContainerAsync(collection);
 
             var type = typeof(TEntity);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
@@ -199,10 +203,13 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync(operations);
         }
 
-        public async Task<BulkOperationResponse<TEntity>> DeleteConcurrentlyAsync<TEntity>(Container container, IReadOnlyList<TEntity> documentsToWorkWith)
+        public async Task<BulkOperationResponse<TEntity>> DeleteConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity
         {
             var type = typeof(TEntity);
+
+            var container = await GetContainerAsync(collection);
+
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
             var attributes = properties.Select(a => new { attr = (PartitionKeyAttribute[])a.GetCustomAttributes(typeof(PartitionKeyAttribute), false), property = a }).Where(a => a.attr.Any(pk => pk.IsPartitionKey)).ToList();
 

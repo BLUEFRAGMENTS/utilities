@@ -37,13 +37,13 @@ namespace Bluefragments.Utilities.Data.Cosmos
         Task<TId> UpdateItemAsync<TEntity>(TEntity item, string collection)
             where TEntity : class, TBaseEntity;
 
-        Task<BulkOperationResponse<TEntity>> UpsertConcurrentlyAsync<TEntity>(Container container, IReadOnlyList<TEntity> documentsToWorkWith)
+        Task<BulkOperationResponse<TEntity>> UpsertConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity;
 
-        Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(Container container, IReadOnlyList<TEntity> documentsToWorkWith)
+        Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity;
 
-        Task<BulkOperationResponse<TEntity>> DeleteConcurrentlyAsync<TEntity>(Container container, IReadOnlyList<TEntity> documentsToWorkWith)
+        Task<BulkOperationResponse<TEntity>> DeleteConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity;
     }
 }
