@@ -14,8 +14,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
             Expression<Func<TEntity, long>> orderByFunction,
             string collection)
             where TEntity : TBaseEntity;
-        Task DeleteItemAsync(string id, string collection, string partitionKey);
 
+        Task DeleteItemAsync(string id, string collection, string partitionKey);
 
         Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(string collection)
             where TEntity : TBaseEntity;

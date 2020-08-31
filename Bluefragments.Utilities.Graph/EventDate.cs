@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Graph
 {
-
     public class EventDate
     {
         [JsonProperty(PropertyName = "dateTime")]
