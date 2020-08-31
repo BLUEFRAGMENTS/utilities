@@ -6,40 +6,44 @@ using Microsoft.Azure.Cosmos;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public interface ICosmosClient<TY>
+    public interface ICosmosClient<TBaseEntity, TId>
     {
-        Task<T> GetFirstAsync<T>(Expression<Func<T, bool>> whereFunction, bool useOrderByDescending, Expression<Func<T, long>> orderByFunction, string collection)
-            where T : TY;
+        Task<TEntity> GetFirstAsync<TEntity>(
+            Expression<Func<TEntity, bool>> whereFunction,
+            bool useOrderByDescending,
+            Expression<Func<TEntity, long>> orderByFunction,
+            string collection)
+            where TEntity : TBaseEntity;
+        Task DeleteItemAsync(string id, string collection, string partitionKey);
 
-        Task DeleteItemAsync<T>(string id, string collection, string partitionKey);
 
-        Task<IEnumerable<T>> GetItemsAsync<T>(string collection)
-            where T : TY;
+        Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(string collection)
+            where TEntity : TBaseEntity;
 
-        Task<IEnumerable<T>> GetItemsAsync<T>(Expression<Func<T, bool>> predicate, string collection)
-            where T : TY;
+        Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, string collection)
+            where TEntity : TBaseEntity;
 
         Task<IEnumerable<dynamic>> GetItemsAsync(string collection, string query);
 
-        Task<T> GetItemAsync<T>(Expression<Func<T, bool>> predicate, string collection)
-            where T : TY;
+        Task<TEntity> GetItemAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, string collection)
+            where TEntity : TBaseEntity;
 
-        Task<T> GetItemAsync<T>(object id, string collection)
-            where T : TY;
+        Task<TEntity> GetItemAsync<TEntity>(TId id, string partitionKey, string collection)
+            where TEntity : TBaseEntity;
 
-        Task<object> UpsertItemAsync<T>(T item, string collection)
-            where T : TY;
+        Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection)
+            where TEntity : class, TBaseEntity;
 
-        Task<object> UpdateItemAsync<T>(T item, string collection)
-            where T : TY;
+        Task<TId> UpdateItemAsync<TEntity>(TEntity item, string collection)
+            where TEntity : class, TBaseEntity;
 
-        Task<BulkOperationResponse<T>> UpsertConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith)
-            where T : TY;
+        Task<BulkOperationResponse<TEntity>> UpsertConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
+            where TEntity : class, TBaseEntity;
 
-        Task<BulkOperationResponse<T>> CreateConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith)
-            where T : TY;
+        Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
+            where TEntity : class, TBaseEntity;
 
-        Task<BulkOperationResponse<T>> DeleteConcurrentlyAsync<T>(Container container, IReadOnlyList<T> documentsToWorkWith)
-            where T : TY;
+        Task<BulkOperationResponse<TEntity>> DeleteConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
+            where TEntity : class, TBaseEntity;
     }
 }

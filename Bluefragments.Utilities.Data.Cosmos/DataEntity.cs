@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Data.Cosmos
 {
-    public abstract class DataEntity : ICosmosEntity
+    public abstract class DataEntity : DataEntityBase<object>, ICosmosEntity
     {
-        [JsonProperty(PropertyName = "id")]
-        public object Id { get; set; }
-
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
     }
 }
