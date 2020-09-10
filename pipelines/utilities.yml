@@ -44,7 +44,7 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     projects: '$(solution)'
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'nuget pack'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
