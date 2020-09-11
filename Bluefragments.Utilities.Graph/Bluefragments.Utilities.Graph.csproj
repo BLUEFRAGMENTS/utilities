@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bluefragments.Utilities\Bluefragments.Utilities.csproj" />
+    <ProjectReference PrivateAssets="all" Include="..\Bluefragments.Utilities\Bluefragments.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
