@@ -267,10 +267,9 @@ namespace Bluefragments.Utilities.Graph
         /// <summary>
         /// This snippet requires an admin work account.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that returns a list of Groups the current user is a member of. </returns>
         public async Task<List<Group>> GetMyMemberOfGroupsAsync()
         {
-
             List<Group> groups = new List<Group>();
 
             // Get groups the current user is a direct member of.
@@ -292,13 +291,23 @@ namespace Bluefragments.Utilities.Graph
             return groups;
         }
 
+        private static HttpClient GetAuthenticatedHttpClient(string token)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+            client.DefaultRequestHeaders.Add("Prefer", "outlook.timezone=\"" + TimeZoneInfo.Local.Id + "\"");
+
+            return client;
+        }
+
         /// <summary>
         /// This client requires that admin consent have been provided to the client.
         /// </summary>
         /// <param name="clientId"></param>
         /// <param name="clientSecret"></param>
         /// <param name="tenant"></param>
-        /// <returns></returns>
+        /// <returns>A task that returns a GraphServiceClient with the provided clientId. </returns>
         private async Task<GraphServiceClient> GetAuthenticatedClientAsync(string clientId, string clientSecret, string tenant)
         {
             var content = new FormUrlEncodedContent(new[]
@@ -324,7 +333,7 @@ namespace Bluefragments.Utilities.Graph
         /// This client requires a valid access token.
         /// </summary>
         /// <param name="token"></param>
-        /// <returns></returns>
+        /// <returns>A GraphServiceClient using the provided token. </returns>
         private GraphServiceClient GetAuthenticatedClient(string token)
         {
             var graphClient = new GraphServiceClient(
@@ -337,16 +346,6 @@ namespace Bluefragments.Utilities.Graph
                     }));
 
             return graphClient;
-        }
-
-        private static HttpClient GetAuthenticatedHttpClient(string token)
-        {
-            var client = new HttpClient();
-
-            client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
-            client.DefaultRequestHeaders.Add("Prefer", "outlook.timezone=\"" + TimeZoneInfo.Local.Id + "\"");
-
-            return client;
         }
     }
 }

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>
@@ -16,14 +20,6 @@
     </PackageReference>
     <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <!-- 
-    * IMPORTANT: The file is not shown as linked in VS 2015, but the rules works so the analyzer sees it.
-    * Additional settings for specific rules (e.g. SA1200 specify namespaces must be placed correctly, the json file then defines what "correctly" means) 
-  -->
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <PropertyGroup>

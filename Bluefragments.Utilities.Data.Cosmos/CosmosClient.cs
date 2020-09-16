@@ -181,7 +181,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             return await ExecuteTasksAsync(operations);
         }
-
+          
         public async Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity
         {
@@ -238,7 +238,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList(),
             };
         }
-
+          
         protected virtual Expression<Func<TEntity, bool>> BasePredicate<TEntity>()
             where TEntity : TBaseEntity
         {
@@ -254,6 +254,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             }
 
             var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(database);
+
             return databaseResponse.Database.GetContainer(collection);
         }
 

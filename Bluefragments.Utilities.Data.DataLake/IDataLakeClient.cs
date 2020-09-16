@@ -19,4 +19,3 @@ namespace Bluefragments.Utilities.Data.DataLake
         List<PathItem> GetFileSystemPathItems(string container, string path);
     }
 }
-    

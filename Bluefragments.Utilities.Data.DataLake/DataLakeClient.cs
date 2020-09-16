@@ -11,15 +11,15 @@ namespace Bluefragments.Utilities.Data.DataLake
 {
     public class DataLakeClient : IDataLakeClient
     {
-        public DataLakeClient(string storageAccountName, string storageAccountKey, string StorageAccountUri)
+        public DataLakeClient(string storageAccountName, string storageAccountKey, string storageAccountUri)
         {
             SharedKeyCredential = new StorageSharedKeyCredential(storageAccountName, storageAccountKey);
-            ServiceClient = new DataLakeServiceClient(new Uri(StorageAccountUri), SharedKeyCredential);
+            ServiceClient = new DataLakeServiceClient(new Uri(storageAccountUri), SharedKeyCredential);
         }
 
-        private StorageSharedKeyCredential SharedKeyCredential { get; }
-
         public DataLakeServiceClient ServiceClient { get; }
+
+        private StorageSharedKeyCredential SharedKeyCredential { get; }
 
         public async Task WriteBlobAsync(string container, string blobPath, string content, string fileName = null, string folder = null)
         {
