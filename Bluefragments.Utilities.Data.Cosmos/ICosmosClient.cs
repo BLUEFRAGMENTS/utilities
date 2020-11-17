@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
@@ -8,10 +9,20 @@ namespace Bluefragments.Utilities.Data.Cosmos
 {
     public interface ICosmosClient<TBaseEntity, TId>
     {
+        Task<IQueryable<TEntity>> GetQueryableAsync<TEntity>(string collection);
+
         Task<TEntity> GetFirstAsync<TEntity>(
             Expression<Func<TEntity, bool>> whereFunction,
             bool useOrderByDescending,
             Expression<Func<TEntity, long>> orderByFunction,
+            string collection)
+            where TEntity : TBaseEntity;
+
+        Task<IEnumerable<TEntity>> GetFirstItemsAsync<TEntity>(
+            Expression<Func<TEntity, bool>> whereFunction,
+            bool useOrderByDescending,
+            Expression<Func<TEntity, long>> orderByFunction,
+            int count,
             string collection)
             where TEntity : TBaseEntity;
 

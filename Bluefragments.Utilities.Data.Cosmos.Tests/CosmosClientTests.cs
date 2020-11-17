@@ -210,6 +210,68 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
             }
         }
 
+        [Fact]
+        public async Task GetFirstItemsAsync_ItemsExists_FindsCorrectNumberOfItems()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                var toCreate = new TestEntity()
+                {
+                    Text = "Hello",
+                    Id = i.ToString(),
+                    Order = i,
+                };
+
+                _ = await cosmosClient.UpsertItemAsync(toCreate, testCollection);
+            }
+
+            var result = await cosmosClient.GetFirstItemsAsync<TestEntity>(
+                x => true,
+                true,
+                x => x.Order,
+                3,
+                testCollection);
+
+            Assert.NotNull(result);
+            Assert.Equal(3, result.Count());
+
+            for (int i = 0; i < 5; i++)
+            {
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+            }
+        }
+
+        [Fact]
+        public async Task GetFirstItemsAsync_ExceedsNumberOfItems_DoesNotFail()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                var toCreate = new TestEntity()
+                {
+                    Text = "Hello",
+                    Id = i.ToString(),
+                    Order = i,
+                };
+
+                _ = await cosmosClient.UpsertItemAsync(toCreate, testCollection);
+            }
+
+            var result = await cosmosClient.GetFirstItemsAsync<TestEntity>(
+                x => true,
+                true,
+                x => x.Order,
+                3,
+                testCollection);
+
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count());
+
+            for (int i = 0; i < 2; i++)
+            {
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+            }
+        }
+
         private class TestEntity : DataEntityBase<string>
         {
             public const string TypeName = "testEntity";

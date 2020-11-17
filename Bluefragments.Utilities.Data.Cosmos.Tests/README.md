@@ -9,7 +9,7 @@ To get started, make sure you are in the directory of the testproject and use th
 dotnet user-secrets set Database {database}
 dotnet user-secrets set Key {key}
 dotnet user-secrets set Uri {uri}
-dotnet user-secrets set Collcetion {collection}
+dotnet user-secrets set Collection {collection}
 ```
 
 Replace the {...} (including brackets) with your parameters for the CosmosDB you want to test against.

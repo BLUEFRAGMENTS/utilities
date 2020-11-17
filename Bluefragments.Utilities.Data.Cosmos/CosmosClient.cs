@@ -32,10 +32,28 @@ namespace Bluefragments.Utilities.Data.Cosmos
             client = new CosmosClient(endpointUrl, authorizationKey, options);
         }
 
+        public async Task<IQueryable<TEntity>> GetQueryableAsync<TEntity>(string collection)
+        {
+            var container = await GetContainerAsync(collection);
+            return container.GetItemLinqQueryable<TEntity>();
+        }
+
         public async Task<TEntity> GetFirstAsync<TEntity>(
             Expression<Func<TEntity, bool>> whereFunction,
             bool useOrderByDescending,
             Expression<Func<TEntity, long>> orderByFunction,
+            string collection)
+            where TEntity : TBaseEntity
+        {
+            var result = await GetFirstItemsAsync<TEntity>(whereFunction, useOrderByDescending, orderByFunction, 1, collection);
+            return result.FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetFirstItemsAsync<TEntity>(
+            Expression<Func<TEntity, bool>> whereFunction,
+            bool useOrderByDescending,
+            Expression<Func<TEntity, long>> orderByFunction,
+            int count,
             string collection)
             where TEntity : TBaseEntity
         {
@@ -45,17 +63,12 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 .Where(BasePredicate<TEntity>())
                 .Where(whereFunction);
 
-            if (useOrderByDescending)
-            {
-                setIterator = setIterator.OrderByDescending(orderByFunction);
-            }
-            else
-            {
-                setIterator = setIterator.OrderBy(orderByFunction);
-            }
+            setIterator = useOrderByDescending
+                ? setIterator.OrderByDescending(orderByFunction)
+                : setIterator.OrderBy(orderByFunction);
 
             var result = await setIterator.ToFeedIterator().ReadNextAsync();
-            return result.FirstOrDefault();
+            return result.Take(count);
         }
 
         public async Task<TEntity> GetItemAsync<TEntity>(TId id, string partitionKey, string collection)
@@ -181,7 +194,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             return await ExecuteTasksAsync(operations);
         }
-          
+
         public async Task<BulkOperationResponse<TEntity>> CreateConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity
         {
@@ -238,7 +251,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 Failures = tasks.Where(task => !task.Result.IsSuccessfull).Select(task => (task.Result.Item, task.Result.CosmosException)).ToList(),
             };
         }
-          
+
         protected virtual Expression<Func<TEntity, bool>> BasePredicate<TEntity>()
             where TEntity : TBaseEntity
         {
