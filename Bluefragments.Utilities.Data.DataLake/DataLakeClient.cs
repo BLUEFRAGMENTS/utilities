@@ -6,6 +6,7 @@ using Azure.Storage;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Files.DataLake.Models;
 using Bluefragments.Utilities.Extensions;
+using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Data.DataLake
 {
@@ -47,6 +48,29 @@ namespace Bluefragments.Utilities.Data.DataLake
             fileContents.Value.Content.Close();
 
             return str;
+        }
+
+        public async Task<List<T>> ReadJsonlBlobAsync<T>(string storageAccountBlobUri)
+        {
+            var file = new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
+            var fileContents = await file.ReadAsync();
+
+            var result = new List<T>();
+            using (var reader = new StreamReader(fileContents.Value.Content))
+            {
+                string line = null;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        result.Add(JsonConvert.DeserializeObject<T>(line));
+                    }
+                }
+            }
+
+            fileContents.Value.Content.Close();
+
+            return result;
         }
 
         public async Task DeleteBlobAsync(string storageAccountBlobUri)
