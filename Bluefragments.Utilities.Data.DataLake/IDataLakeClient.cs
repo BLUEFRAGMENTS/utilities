@@ -14,6 +14,8 @@ namespace Bluefragments.Utilities.Data.DataLake
 
         Task<string> ReadBlobAsync(string storageAccountBlobUri);
 
+        Task<List<T>> ReadJsonlBlobAsync<T>(string storageAccountBlobUri);
+
         Task DeleteBlobAsync(string storageAccountBlobUri);
 
         List<PathItem> GetFileSystemPathItems(string container, string path);
