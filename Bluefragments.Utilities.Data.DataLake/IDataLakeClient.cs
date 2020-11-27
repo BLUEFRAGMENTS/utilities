@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Files.DataLake.Models;
@@ -14,10 +15,14 @@ namespace Bluefragments.Utilities.Data.DataLake
 
         Task<string> ReadBlobAsync(string storageAccountBlobUri);
 
+        Task<Stream> ReadBlobAsStreamAsync(string storageAccountBlobUri);
+
         Task<List<T>> ReadJsonlBlobAsync<T>(string storageAccountBlobUri);
 
         Task DeleteBlobAsync(string storageAccountBlobUri);
 
         List<PathItem> GetFileSystemPathItems(string container, string path);
+
+        DataLakeFileClient GetDataLakeFileClient(string storageAccountBlobUri);
     }
 }
