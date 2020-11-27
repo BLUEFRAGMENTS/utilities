@@ -50,6 +50,14 @@ namespace Bluefragments.Utilities.Data.DataLake
             return str;
         }
 
+        public async Task<Stream> ReadBlobAsStreamAsync(string storageAccountBlobUri)
+        {
+            var file = new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
+            var fileContents = await file.ReadAsync();
+
+            return fileContents.Value.Content;
+        }
+
         public DataLakeFileClient GetDataLakeFileClient(string storageAccountBlobUri)
         {
             return new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
