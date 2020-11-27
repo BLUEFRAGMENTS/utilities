@@ -19,5 +19,7 @@ namespace Bluefragments.Utilities.Data.DataLake
         Task DeleteBlobAsync(string storageAccountBlobUri);
 
         List<PathItem> GetFileSystemPathItems(string container, string path);
+
+        DataLakeFileClient GetDataLakeFileClient(string storageAccountBlobUri);
     }
 }
