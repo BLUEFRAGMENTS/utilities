@@ -58,5 +58,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             where TEntity : class, TBaseEntity;
 
         Task CreateContainerIfNotExistsAsync(string collection, string partitionKey, int throughPut = 400);
+
+        Task DeleteContainerAsync(string collection);
     }
 }
