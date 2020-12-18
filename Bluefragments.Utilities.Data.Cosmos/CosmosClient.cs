@@ -237,6 +237,26 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync(operations);
         }
 
+        public async Task CreateContainerIfNotExistsAsync(string collection, string partitionKey, int throughPut = 400)
+        {
+            collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
+            partitionKey.ThrowIfParameterIsNullOrWhiteSpace(nameof(partitionKey));
+
+            var database = await GetDatabaseAsync();
+            await database.CreateContainerIfNotExistsAsync(
+                collection,
+                partitionKey,
+                throughPut);
+        }
+
+        public async Task DeleteContainerAsync(string collection)
+        {
+            collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
+
+            var container = await GetContainerAsync(collection);
+            await container.DeleteContainerAsync();
+        }
+
         protected async Task<BulkOperationResponse<T>> ExecuteTasksAsync<T>(IReadOnlyList<Task<OperationResponse<T>>> tasks)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -260,15 +280,16 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         protected async Task<Container> GetContainerAsync(string collection)
         {
-            if (string.IsNullOrEmpty(database) ||
-                string.IsNullOrEmpty(collection))
-            {
-                throw new Exception("database parameters not valid");
-            }
+            collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
 
+            var database = await GetDatabaseAsync();
+            return database.GetContainer(collection);
+        }
+
+        protected async Task<Database> GetDatabaseAsync()
+        {
             var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(database);
-
-            return databaseResponse.Database.GetContainer(collection);
+            return databaseResponse.Database;
         }
 
         private async Task<TId> CreateItemAsync(TBaseEntity item, string collection)

@@ -56,5 +56,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         Task<BulkOperationResponse<TEntity>> DeleteConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity;
+
+        Task CreateContainerIfNotExistsAsync(string collection, string partitionKey, int throughPut = 400);
     }
 }

@@ -9,7 +9,10 @@ using Xunit;
 
 namespace Bluefragments.Utilities.Data.Cosmos.Tests
 {
-    public class CosmosClientTests
+    /// <summary>
+    /// BEWARE ! The tests clean up after them selfves. Run these against a DEV (preferably localhost) database.
+    /// </summary>
+    public class CosmosClientTests : IAsyncLifetime
     {
         private readonly string testCollection;
         private readonly CosmosClient<DataEntityBase<string>, string> cosmosClient;
@@ -27,6 +30,16 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
             testCollection = configuration["Collection"] ?? throw new ArgumentNullException("Collection");
 
             cosmosClient = new CosmosClient<DataEntityBase<string>, string>(database, key, url);
+        }
+
+        public async Task InitializeAsync()
+        {
+            await cosmosClient.CreateContainerIfNotExistsAsync(testCollection, "/type");
+        }
+
+        public async Task DisposeAsync()
+        {
+            await cosmosClient.DeleteContainerAsync(testCollection);
         }
 
         [Fact]
