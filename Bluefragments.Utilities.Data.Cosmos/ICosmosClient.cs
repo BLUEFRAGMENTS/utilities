@@ -48,6 +48,8 @@ namespace Bluefragments.Utilities.Data.Cosmos
         Task<TId> UpdateItemAsync<TEntity>(TEntity item, string collection)
             where TEntity : class, TBaseEntity;
 
+        Task<TId> UpdateDynamicAsync(dynamic item, string collection);
+
         Task<BulkOperationResponse<TEntity>> UpsertConcurrentlyAsync<TEntity>(string collection, IReadOnlyList<TEntity> documentsToWorkWith)
             where TEntity : class, TBaseEntity;
 
