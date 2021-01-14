@@ -154,6 +154,13 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return result.Resource.Id;
         }
 
+        public async Task<TId> UpdateDynamicAsync(dynamic item, string collection)
+        {
+            var container = await GetContainerAsync(collection);
+            var result = await container.ReplaceItemAsync(item, item.id.ToString());
+            return result.Resource.Id;
+        }
+
         public async Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection)
             where TEntity : class, TBaseEntity
         {
