@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -58,6 +60,69 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
                 Assert.NotNull(id);
                 Assert.NotEmpty(id);
+
+                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+
+                Assert.NotNull(resultItem);
+                Assert.Equal(resultItem.Text, itemText);
+            }
+            finally
+            {
+                await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
+            }
+        }
+
+        [Fact]
+        public async Task UpsertItemAsync_WrongETag_ThrowsConcurrencyException()
+        {
+            var itemText = "Hello";
+            var item = new TestEntity()
+            {
+                Text = itemText,
+                Id = Guid.NewGuid().ToString(),
+            };
+
+            try
+            {
+                var id = await cosmosClient.UpsertItemAsync(item, testCollection);
+
+                Assert.NotNull(id);
+                Assert.NotEmpty(id);
+
+                await Assert.ThrowsAsync<ConcurrencyException>(() => cosmosClient.UpsertItemAsync(item, testCollection, "Hello"));
+
+                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+
+                Assert.NotNull(resultItem);
+                Assert.Equal(resultItem.Text, itemText);
+            }
+            finally
+            {
+                await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
+            }
+        }
+
+        [Fact]
+        public async Task UpsertItemAsync_ETagMatches_Succeeds()
+        {
+            var itemText = "World";
+            var item = new TestEntity()
+            {
+                Text = "Hello",
+                Id = Guid.NewGuid().ToString(),
+            };
+
+            try
+            {
+                var id = await cosmosClient.UpsertItemAsync(item, testCollection);
+
+                Assert.NotNull(id);
+                Assert.NotEmpty(id);
+
+                var itemFromDb = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+                itemFromDb.Text = itemText;
+
+                await cosmosClient.UpsertItemAsync(itemFromDb, testCollection, itemFromDb.Etag);
 
                 var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
 
@@ -297,6 +362,9 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
             public string Text { get; set; }
 
             public int Order { get; set; }
+
+            [JsonProperty("_etag")]
+            public string Etag { get; set; }
         }
     }
 }

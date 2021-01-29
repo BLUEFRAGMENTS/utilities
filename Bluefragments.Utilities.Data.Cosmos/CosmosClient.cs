@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Threading.Tasks;
 using Bluefragments.Utilities.Extensions;
 using Microsoft.Azure.Cosmos;
@@ -161,15 +162,33 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return result.Resource.Id;
         }
 
-        public async Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection)
+        public async Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection, string ifMatchEtag = "")
             where TEntity : class, TBaseEntity
         {
             var container = await GetContainerAsync(collection);
-            var result = await container.UpsertItemAsync(item);
+            var options = new ItemRequestOptions();
 
-            if (result?.Resource != null)
+            try
             {
-                return result.Resource.Id;
+                if (string.IsNullOrEmpty(ifMatchEtag) == false)
+                {
+                    options.IfMatchEtag = ifMatchEtag;
+                }
+
+                var result = await container.UpsertItemAsync(item, requestOptions: options);
+                if (result?.Resource != null)
+                {
+                    return result.Resource.Id;
+                }
+            }
+            catch (CosmosException ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.PreconditionFailed)
+                {
+                    throw new ConcurrencyException($"ETag {ifMatchEtag} doesn't match the newest version of the document's ETag", ex);
+                }
+
+                throw;
             }
 
             return default;

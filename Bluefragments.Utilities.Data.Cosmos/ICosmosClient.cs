@@ -42,7 +42,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         Task<TEntity> GetItemAsync<TEntity>(TId id, string partitionKey, string collection)
             where TEntity : TBaseEntity;
 
-        Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection)
+        Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection, string ifMatchEtag = "")
             where TEntity : class, TBaseEntity;
 
         Task<TId> UpdateItemAsync<TEntity>(TEntity item, string collection)
