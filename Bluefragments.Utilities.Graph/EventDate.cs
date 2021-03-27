@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Graph
 {
-
     public class EventDate
     {
         [JsonProperty(PropertyName = "dateTime")]

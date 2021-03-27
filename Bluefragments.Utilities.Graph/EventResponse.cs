@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Bluefragments.Utilities.Graph
 {
-
     public class EventResponse
     {
         [JsonProperty(PropertyName = "comment")]
