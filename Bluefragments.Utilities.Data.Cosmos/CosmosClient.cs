@@ -91,9 +91,6 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
             var result = await setIterator.ReadNextAsync();
             return result.FirstOrDefault();
-            var result = await setIterator.ReadNextAsync();
-
-            return result.FirstOrDefault<T>();
         }
 
         public async Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(string collection)
