@@ -53,8 +53,6 @@ namespace Bluefragments.Utilities.Data.Cosmos
                     {
                         Item = item,
                         IsSuccessfull = true,
-
-                        // RequestUnitsConsumed = task.Result.RequestCharge
                     };
                 }
 

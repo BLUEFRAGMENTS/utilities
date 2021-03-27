@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -13,11 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- 
-      * IMPORTANT: The file is not shown as linked in VS 2015, but the rules works so the analyzer sees it.
-      * Additional settings for specific rules (e.g. SA1200 specify namespaces must be placed correctly, the json file then defines what "correctly" means) 
-      -->
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+    <Content Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
   
   <ItemGroup>
