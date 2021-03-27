@@ -82,14 +82,12 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<TEntity> GetItemAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, string collection)
             where TEntity : TBaseEntity
         {
-            var container = await GetContainerAsync(collection);
+            var result = await GetItemsAsync<TEntity>(predicate, collection);
+            if (result == null)
+            {
+                return default;
+            }
 
-            var setIterator = container.GetItemLinqQueryable<TEntity>()
-                .Where(BasePredicate<TEntity>())
-                .Where(predicate)
-                .ToFeedIterator();
-
-            var result = await setIterator.ReadNextAsync();
             return result.FirstOrDefault();
         }
 
