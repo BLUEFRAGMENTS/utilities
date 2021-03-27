@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.15.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,6 +22,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference PrivateAssets="all" Include="..\Bluefragments.Utilities\Bluefragments.Utilities.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resources\Components.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>
@@ -36,6 +43,7 @@
 
     <!-- Disable certain errors around assembly mismatch -->
     <NoWarn>1701;1702;1705;NU1701</NoWarn>
+    <PackageIcon>Components.png</PackageIcon>
   </PropertyGroup>
 
 </Project>

@@ -22,6 +22,13 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\resources\Components.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
   <PropertyGroup>
     <!-- Ensure breaking rules will fail build (see also: http://stylecop.codeplex.com/wikipage?title=Setting%20Up%20StyleCop%20MSBuild%20Integration&referringTitle=Documentation) -->
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
@@ -35,6 +42,7 @@
 
     <!-- Disable certain errors around assembly mismatch -->
     <NoWarn>1701;1702;1705;NU1701;NU5128;NU5115;</NoWarn>
+    <PackageIcon>Components.png</PackageIcon>
   </PropertyGroup>
 
 </Project>
