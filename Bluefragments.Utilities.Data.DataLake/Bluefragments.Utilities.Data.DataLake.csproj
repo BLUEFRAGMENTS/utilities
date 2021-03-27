@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -22,6 +22,13 @@
 
   <ItemGroup>
     <ProjectReference PrivateAssets="all" Include="..\Bluefragments.Utilities\Bluefragments.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\resources\Components.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   
   <PropertyGroup>
@@ -49,6 +56,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1701;1702;1705;NU1701</NoWarn>
+    <PackageIcon>Components.png</PackageIcon>
   </PropertyGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,7 +6,7 @@
     <Authors>BLUEFRAGMENTS</Authors>
     <PackageProjectUrl>https://github.com/Bluefragments/utilities</PackageProjectUrl>
     <Version>1.1.0</Version>
-    <PackageIcon>icon.png</PackageIcon>
+    <PackageIcon>Components.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="icon.png">
+    <None Include="..\resources\Components.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
