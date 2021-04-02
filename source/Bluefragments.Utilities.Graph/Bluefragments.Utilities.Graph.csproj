@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>BLUEFRAGMENTS</Authors>
+    <PackageProjectUrl>https://github.com/Bluefragments/utilities</PackageProjectUrl>
+    <Version>1.1.0</Version>
+    <PackageIcon>Components.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Graph" Version="3.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference PrivateAssets="all" Include="..\Bluefragments.Utilities\Bluefragments.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\resources\Components.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\resources\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- Ensure breaking rules will fail build (see also: http://stylecop.codeplex.com/wikipage?title=Setting%20Up%20StyleCop%20MSBuild%20Integration&referringTitle=Documentation) -->
+
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+
+    <!-- Specify rules that configure the behaviour of StyleCop (see also https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/Configuration.md) -->
+    <CodeAnalysisRuleSet>..\bluefragments.ruleset</CodeAnalysisRuleSet>
+
+    <!-- Ensure warnins are treated as errors -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>1701;1702;1705;NU1701</NoWarn>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  </PropertyGroup>
+
+</Project>

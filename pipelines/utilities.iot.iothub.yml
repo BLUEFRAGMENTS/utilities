@@ -1,0 +1,63 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+name: 'Set dynamically from build task'
+
+variables:
+  solution: '**/Bluefragments.Utilities.Iot.IotHub.csproj'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  version.MajorMinor: '1.0' # Manually adjust the version number as needed for semantic versioning. Revision is auto-incremented.
+  version.Revision: $[counter(variables['version.MajorMinor'], 0)]
+  versionNumber: '$(version.MajorMinor).$(version.Revision)'
+
+steps:
+- task: PowerShell@2
+  displayName: Set the name of the build (i.e. the Build.BuildNumber)
+  inputs:
+    targetType: 'inline'
+    script: |
+      [string] $buildName = "$(versionNumber)_$(Build.SourceBranchName)"
+      Write-Host "Setting the name of the build to '$buildName'."
+      Write-Host "##vso[build.updatebuildnumber]$buildName"
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VersionDotNetCoreAssemblies@2
+  inputs:
+    Path: '$(Build.SourcesDirectory)'
+    Injectversion: true
+    VersionNumber: '$(versionNumber)'
+    OutputVersion: 'OutputedVersion'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+    projects: '$(solution)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'nuget pack'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'pack'
+    includeReferencedProjects: true
+    includeSymbols: true
+    packagesToPack: '$(solution)'
+    versioningScheme: 'off'
+
+- task: NuGetCommand@2
+  displayName: 'nuget push'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'push'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget'
