@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Dpx.Iot.Infrastructure.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
 
-namespace Dpx.Iot.Infrastructure.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Devices
 {
     public interface ICloudToDevice : IDisposable
     {

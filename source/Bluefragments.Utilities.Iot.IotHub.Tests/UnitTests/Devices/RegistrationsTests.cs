@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Dpx.Iot.Infrastructure.Devices;
-using Dpx.Iot.Infrastructure.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
 using FakeItEasy;
 using Microsoft.Azure.Devices;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.UnitTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.UnitTests.Devices
 {
     public class RegistrationsTests : IDisposable
     {

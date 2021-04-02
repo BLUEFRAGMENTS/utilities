@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Dpx.Iot.Infrastructure.Entities;
-using Dpx.Iot.Infrastructure.Extensions;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Extensions;
 using Microsoft.Azure.Devices;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.UnitTests.Extentions
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.UnitTests.Extentions
 {
     public class DeviceExtentionsTests
     {

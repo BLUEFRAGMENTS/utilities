@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.UnitTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.UnitTests.Devices
 {
     public class IoTClientTests
     {

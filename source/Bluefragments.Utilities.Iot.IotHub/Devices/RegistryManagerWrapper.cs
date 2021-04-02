@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Bluefragments.Utilities.Extensions;
-using Dpx.Iot.Infrastructure.Extensions;
+using Bluefragments.Utilities.Iot.IotHub.Extensions;
 using Microsoft.Azure.Devices;
 
-namespace Dpx.Iot.Infrastructure.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Devices
 {
     internal class RegistryManagerWrapper : IRegistryManagerWrapper
     {

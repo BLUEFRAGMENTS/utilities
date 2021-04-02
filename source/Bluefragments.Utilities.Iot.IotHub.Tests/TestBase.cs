@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace Dpx.Iot.Infrastructure.Tests
+namespace Bluefragments.Utilities.Iot.IotHub.Tests
 {
     public class TestBase : IDisposable
     {

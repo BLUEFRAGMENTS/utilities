@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <UserSecretsId>Dpx.Iot.Infrastructure.Tests-85566e79-eed9-459d-88bf-890bbefeac61</UserSecretsId>
+    <UserSecretsId>Bluefragments.Utilities.Iot.IotHub.Tests-85566e79-eed9-459d-88bf-890bbefeac61</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

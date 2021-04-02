@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bluefragments.Utilities.Extensions;
-using Dpx.Iot.Infrastructure.Entities;
-using Dpx.Iot.Infrastructure.Extensions;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Extensions;
 
-namespace Dpx.Iot.Infrastructure.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Devices
 {
     public class Registration : IRegistration, IDisposable
     {

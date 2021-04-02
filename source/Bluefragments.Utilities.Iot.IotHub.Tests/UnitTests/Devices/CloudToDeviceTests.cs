@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Dpx.Iot.Infrastructure.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.UnitTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.UnitTests.Devices
 {
     public class CloudToDeviceTests
     {

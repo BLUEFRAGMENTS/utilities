@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bluefragments.Iot.Devices;
-using Dpx.Iot.Infrastructure.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Dpx.Iot.Infrastructure.Tests.IntegrationTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.IntegrationTests.Devices
 {
     [CollectionDefinition(nameof(CloudToDeviceTests), DisableParallelization = true)]
     public class DeviceToCloudTests : TestBase, IAsyncLifetime

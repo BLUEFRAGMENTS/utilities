@@ -1,8 +1,8 @@
 ﻿using System;
 using Bluefragments.Iot.Devices;
-using Dpx.Iot.Infrastructure.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
 
-namespace Dpx.Iot.Infrastructure
+namespace Bluefragments.Utilities.Iot.IotHub
 {
     public interface IIotClient : IDisposable
     {

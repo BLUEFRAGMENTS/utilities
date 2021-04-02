@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dpx.Iot.Infrastructure.Extensions
+namespace Bluefragments.Utilities.Iot.IotHub.Extensions
 {
     internal static class StringExtensions
     {

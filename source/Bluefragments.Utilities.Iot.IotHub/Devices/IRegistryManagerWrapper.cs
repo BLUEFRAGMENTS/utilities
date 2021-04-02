@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 
-namespace Dpx.Iot.Infrastructure.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Devices
 {
     public interface IRegistryManagerWrapper
     {
