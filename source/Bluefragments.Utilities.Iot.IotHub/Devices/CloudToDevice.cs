@@ -5,7 +5,7 @@ using Bluefragments.Utilities.Extensions;
 using Microsoft.Azure.Devices;
 using Newtonsoft.Json;
 
-namespace Dpx.Iot.Infrastructure.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Devices
 {
     public class CloudToDevice : ICloudToDevice, IDisposable
     {

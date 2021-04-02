@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Bluefragments.Utilities.Extensions;
-using Dpx.Iot.Infrastructure.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
 
-namespace Dpx.Iot.Infrastructure.Extensions
+namespace Bluefragments.Utilities.Iot.IotHub.Extensions
 {
     public static class DeviceExtentions
     {

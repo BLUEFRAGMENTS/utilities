@@ -1,5 +1,5 @@
-﻿using Dpx.Iot.Infrastructure.Devices;
-using Dpx.Iot.Infrastructure.Entities;
+﻿using Bluefragments.Utilities.Iot.IotHub.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
 
 namespace Bluefragments.Iot.Devices
 {

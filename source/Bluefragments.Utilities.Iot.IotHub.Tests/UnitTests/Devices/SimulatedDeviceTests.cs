@@ -1,8 +1,8 @@
 ﻿using System;
-using Dpx.Iot.Infrastructure.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.UnitTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.UnitTests.Devices
 {
     public class SimulatedDeviceTests
     {

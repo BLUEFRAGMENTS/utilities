@@ -1,4 +1,4 @@
-﻿namespace Dpx.Iot.Infrastructure.Entities
+﻿namespace Bluefragments.Utilities.Iot.IotHub.Entities
 {
     public class Device
     {

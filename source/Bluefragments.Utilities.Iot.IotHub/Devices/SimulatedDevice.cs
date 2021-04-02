@@ -6,7 +6,7 @@ using Bluefragments.Utilities.Extensions;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
 
-namespace Dpx.Iot.Infrastructure.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Devices
 {
     public class SimulatedDevice : IDisposable
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Dpx.Iot.Infrastructure.Devices;
-using Dpx.Iot.Infrastructure.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.IntegrationTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.IntegrationTests.Devices
 {
     [CollectionDefinition(nameof(RegistrationsTests), DisableParallelization = true)]
     public class RegistrationsTests : TestBase, IAsyncLifetime

@@ -1,8 +1,8 @@
 ﻿using System;
 using Bluefragments.Utilities.Extensions;
-using Dpx.Iot.Infrastructure.Devices;
-using Dpx.Iot.Infrastructure.Entities;
-using Dpx.Iot.Infrastructure.Extensions;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Entities;
+using Bluefragments.Utilities.Iot.IotHub.Extensions;
 using Microsoft.Azure.Devices.Client;
 
 namespace Bluefragments.Iot.Devices

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Bluefragments.Iot.Devices;
-using Dpx.Iot.Infrastructure.Devices;
+using Bluefragments.Utilities.Iot.IotHub.Devices;
 
-[assembly: InternalsVisibleTo("Dpx.Iot.Infrastructure.Tests")]
+[assembly: InternalsVisibleTo("Bluefragments.Utilities.Iot.IotHub.Tests")]
 
-namespace Dpx.Iot.Infrastructure
+namespace Bluefragments.Utilities.Iot.IotHub
 {
     public class IotClient : IIotClient, IDisposable
     {

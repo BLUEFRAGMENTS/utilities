@@ -4,7 +4,7 @@ using System.Text;
 using Bluefragments.Iot.Devices;
 using Xunit;
 
-namespace Dpx.Iot.Infrastructure.Tests.UnitTests.Devices
+namespace Bluefragments.Utilities.Iot.IotHub.Tests.UnitTests.Devices
 {
     public class DeviceToCloudTests
     {
