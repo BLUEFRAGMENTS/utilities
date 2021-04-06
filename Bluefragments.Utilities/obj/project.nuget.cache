@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "r63GEIiGvnDziG/LXdwqJoWsECsitp6s4hDK8LaOFy9pfICT9amf+qCYyDLycd6DPBPiBDMhECGG5tTvXzlDSw==",
+  "success": true,
+  "projectFilePath": "C:\\Repos\\bluefragments\\utilities\\Bluefragments.Utilities\\Bluefragments.Utilities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\impnd\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\stylecop.analyzers\\1.1.118\\stylecop.analyzers.1.1.118.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "dgSpecHash": "KGImMItv6rvO18gkwjgcBxBeyFQdVtvigWZYZbjRpXRHj+sR3oESqLJ9fnoI3w+FlvPJ1EFYXgGPMIbvIn61ng==",
+  "success": true,
+  "projectFilePath": "C:\\Repos\\bluefragments\\utilities\\Bluefragments.Utilities.Data.DataLake\\Bluefragments.Utilities.Data.DataLake.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\impnd\\.nuget\\packages\\azure.core\\1.2.2\\azure.core.1.2.2.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\azure.storage.blobs\\12.4.4\\azure.storage.blobs.12.4.4.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\azure.storage.common\\12.4.3\\azure.storage.common.12.4.3.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\azure.storage.files.datalake\\12.2.2\\azure.storage.files.datalake.12.2.2.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.0.0\\microsoft.bcl.asyncinterfaces.1.0.0.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\stylecop.analyzers\\1.1.118\\stylecop.analyzers.1.1.118.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\system.diagnostics.diagnosticsource\\4.6.0\\system.diagnostics.diagnosticsource.4.6.0.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\system.text.json\\4.6.0\\system.text.json.4.6.0.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.2\\system.threading.tasks.extensions.4.5.2.nupkg.sha512"
+  ],
+  "logs": []
+}
