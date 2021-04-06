@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "RFDV/qmxjw0IqOhA1aDbXGltgGFC1iokfWom1Ky5OPjsGbldv4qdvHzBvofz5hwzy9ELO5b3ZO67hwSN/M4HtA==",
+  "success": true,
+  "projectFilePath": "C:\\Repos\\bluefragments\\utilities\\Bluefragments.Utilities.Smtp\\Bluefragments.Utilities.Smtp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\impnd\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\sendgrid\\9.15.1\\sendgrid.9.15.1.nupkg.sha512",
+    "C:\\Users\\impnd\\.nuget\\packages\\stylecop.analyzers\\1.1.118\\stylecop.analyzers.1.1.118.nupkg.sha512"
+  ],
+  "logs": []
+}
