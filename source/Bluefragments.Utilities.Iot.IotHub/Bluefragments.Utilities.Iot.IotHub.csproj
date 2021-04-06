@@ -28,14 +28,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- Ensure breaking rules will fail build (see also: http://stylecop.codeplex.com/wikipage?title=Setting%20Up%20StyleCop%20MSBuild%20Integration&referringTitle=Documentation) -->
-
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
-
-    <!-- Specify rules that configure the behaviour of StyleCop (see also https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/Configuration.md) -->
     <CodeAnalysisRuleSet>..\bluefragments.ruleset</CodeAnalysisRuleSet>
-
-    <!-- Ensure warnins are treated as errors -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1701;1702;1705;NU1701</NoWarn>
@@ -46,6 +40,8 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Bluefragments/utilities</PackageProjectUrl>
     <Authors>BLUEFRAGMENTS</Authors>
+    <Description></Description>
+    <Copyright>BLUEFRAGMENTS 2021</Copyright>
   </PropertyGroup>
   
 </Project>

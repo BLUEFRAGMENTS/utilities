@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>BLUEFRAGMENTS</Company>
     <Authors>BLUEFRAGMENTS</Authors>
-    <Copyright>BLUEFRAGMENTS 2020</Copyright>
+    <Copyright>BLUEFRAGMENTS 2021</Copyright>
     <PackageProjectUrl>https://github.com/bluefragments/utilities</PackageProjectUrl>
     <PackageIcon>Components.png</PackageIcon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
