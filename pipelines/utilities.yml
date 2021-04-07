@@ -1,5 +1,4 @@
-trigger:
-- master
+trigger: none
 
 pool:
   vmImage: 'windows-latest'
@@ -10,7 +9,7 @@ variables:
   solution: '**/Bluefragments.Utilities.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  version.MajorMinor: '5.0' # Manually adjust the version number as needed for semantic versioning. Revision is auto-incremented.
+  version.MajorMinor: '5.0'
   version.Revision: $[counter(variables['version.MajorMinor'], 0)]
   versionNumber: '$(version.MajorMinor).$(version.Revision)'
 
@@ -45,14 +44,18 @@ steps:
     projects: '$(solution)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'nuget pack'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: 'create nuget packages'
   inputs:
     command: 'pack'
-    includeReferencedProjects: true
-    includeSymbols: true
     packagesToPack: '$(solution)'
+    packDirectory: '$(Build.ArtifactStagingDirectory)/packages/nuget'
+    nobuild: true
     versioningScheme: 'off'
+
+- publish: '$(Build.ArtifactStagingDirectory)/packages/nuget'
+  displayName: 'publish artifact: $(ArtifactNuGetName)'
+  artifact: 'packages-nuget'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 - task: NuGetCommand@2
   displayName: 'nuget push'

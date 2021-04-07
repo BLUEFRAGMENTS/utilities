@@ -1,5 +1,4 @@
-trigger:
-- master
+trigger: none
 
 pool:
   vmImage: 'windows-latest'
@@ -10,7 +9,7 @@ variables:
   solution: '**/Bluefragments.Utilities.Iot.IotHub.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  version.MajorMinor: '1.1' # Manually adjust the version number as needed for semantic versioning. Revision is auto-incremented.
+  version.MajorMinor: '5.0'
   version.Revision: $[counter(variables['version.MajorMinor'], 0)]
   versionNumber: '$(version.MajorMinor).$(version.Revision)'
 
