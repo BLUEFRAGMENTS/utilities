@@ -3,10 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
+    <Version>5.0.0</Version>
     <Authors>BLUEFRAGMENTS</Authors>
     <PackageProjectUrl>https://github.com/bluefragments/utilities</PackageProjectUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\impnd\.nuget\packages\microsoft.azure.cosmos\3.15.0\contentFiles\any\netstandard2.0\ThirdPartyNotice.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.15.0" />
