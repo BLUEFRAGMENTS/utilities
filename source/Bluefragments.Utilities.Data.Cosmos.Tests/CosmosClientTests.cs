@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
@@ -21,10 +21,10 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
         public CosmosClientTests()
         {
-            var builder = new ConfigurationBuilder()
-                .AddUserSecrets<CosmosClientTests>();
-
-            var configuration = builder.Build();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
 
             var database = configuration["Database"] ?? throw new ArgumentNullException("Database");
             var key = configuration["Key"] ?? throw new ArgumentNullException("Key");
