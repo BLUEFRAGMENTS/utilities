@@ -35,7 +35,7 @@ namespace Bluefragments.Utilities.Smtp
             }
         }
 
-        public async Task<bool> SendMailAsync(HttpClient httpClient, string receivers, string subject, string body, byte[] attachment = null, string attachmentName = null)
+        public async Task<bool> SendMailAsync(string receivers, string subject, string body, byte[] attachment = null, string attachmentName = null, HttpClient httpClient = null)
         {
             if (string.IsNullOrEmpty(receivers))
             {
@@ -50,6 +50,11 @@ namespace Bluefragments.Utilities.Smtp
             if (body == null)
             {
                 throw new ArgumentNullException(nameof(body));
+            }
+
+            if (httpClient == null)
+            {
+                httpClient = new HttpClient();
             }
 
             var client = new SendGridClient(httpClient, apiKey: apiKey);
