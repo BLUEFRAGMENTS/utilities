@@ -33,10 +33,10 @@ namespace Bluefragments.Utilities.Data.Cosmos
             client = new CosmosClient(endpointUrl, authorizationKey, options);
         }
 
-        public async Task<IQueryable<TEntity>> GetQueryableAsync<TEntity>(string collection)
+        public IQueryable<TEntity> GetQueryable<TEntity>(string collection)
         {
-            var container = await GetContainerAsync(collection);
-            return container.GetItemLinqQueryable<TEntity>();
+            var container = GetContainer(collection);
+            return container.GetItemLinqQueryable<TEntity>(allowSynchronousQueryExecution: true);
         }
 
         public async Task<TEntity> GetFirstAsync<TEntity>(
@@ -58,7 +58,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             string collection)
             where TEntity : TBaseEntity
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
 
             var setIterator = container.GetItemLinqQueryable<TEntity>()
                 .Where(BasePredicate<TEntity>())
@@ -75,7 +75,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<TEntity> GetItemAsync<TEntity>(TId id, string partitionKey, string collection)
             where TEntity : TBaseEntity
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             return await container.ReadItemAsync<TEntity>(id.ToString(), new PartitionKey(partitionKey));
         }
 
@@ -100,7 +100,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<IEnumerable<TEntity>> GetItemsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, string collection)
             where TEntity : TBaseEntity
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             var setIterator = container.GetItemLinqQueryable<TEntity>()
                 .Where(BasePredicate<TEntity>())
                 .Where(predicate)
@@ -129,7 +129,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
 
             var setIterator = container.GetItemQueryIterator<dynamic>(query);
 
@@ -148,14 +148,14 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<TId> UpdateItemAsync<TEntity>(TEntity item, string collection)
             where TEntity : class, TBaseEntity
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             var result = await container.ReplaceItemAsync(item, item.Id.ToString());
             return result.Resource.Id;
         }
 
         public async Task<TId> UpdateDynamicAsync(dynamic item, string collection)
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             var result = await container.ReplaceItemAsync(item, item.id.ToString());
             return result.Resource.Id;
         }
@@ -163,7 +163,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         public async Task<TId> UpsertItemAsync<TEntity>(TEntity item, string collection, string ifMatchEtag = "")
             where TEntity : class, TBaseEntity
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             var options = new ItemRequestOptions();
 
             try
@@ -194,7 +194,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 
         public async Task DeleteItemAsync(string id, string collection, string partitionKey)
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             _ = await container.DeleteItemAsync<TBaseEntity>(id, new PartitionKey(partitionKey));
         }
 
@@ -203,7 +203,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         {
             var operations = new List<Task<OperationResponse<TEntity>>>(documentsToWorkWith.Count);
 
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
 
             var type = typeof(TEntity);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
@@ -224,7 +224,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         {
             var operations = new List<Task<OperationResponse<TEntity>>>(documentsToWorkWith.Count);
 
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
 
             var type = typeof(TEntity);
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
@@ -245,7 +245,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         {
             var type = typeof(TEntity);
 
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
 
             var properties = type.GetProperties().Where(prop => prop.IsDefined(typeof(PartitionKeyAttribute), false));
             var attributes = properties.Select(a => new { attr = (PartitionKeyAttribute[])a.GetCustomAttributes(typeof(PartitionKeyAttribute), false), property = a }).Where(a => a.attr.Any(pk => pk.IsPartitionKey)).ToList();
@@ -266,7 +266,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
             collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
             partitionKey.ThrowIfParameterIsNullOrWhiteSpace(nameof(partitionKey));
 
-            var database = await GetDatabaseAsync();
+            var database = GetDatabase();
             await database.CreateContainerIfNotExistsAsync(
                 collection,
                 partitionKey,
@@ -277,7 +277,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
         {
             collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
 
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             await container.DeleteContainerAsync();
         }
 
@@ -302,23 +302,22 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return i => true;
         }
 
-        protected async Task<Container> GetContainerAsync(string collection)
+        protected Container GetContainer(string collection)
         {
             collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
 
-            var database = await GetDatabaseAsync();
+            var database = GetDatabase();
             return database.GetContainer(collection);
         }
 
-        protected async Task<Database> GetDatabaseAsync()
-        {
-            var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(database);
-            return databaseResponse.Database;
+        protected Database GetDatabase()
+        {            
+            return client.GetDatabase(database);            
         }
 
         private async Task<TId> CreateItemAsync(TBaseEntity item, string collection)
         {
-            var container = await GetContainerAsync(collection);
+            var container = GetContainer(collection);
             var response = await container.CreateItemAsync(item);
 
             if (response?.Resource != null)

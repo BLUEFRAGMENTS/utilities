@@ -9,7 +9,7 @@ namespace Bluefragments.Utilities.Data.Cosmos
 {
     public interface ICosmosClient<TBaseEntity, TId>
     {
-        Task<IQueryable<TEntity>> GetQueryableAsync<TEntity>(string collection);
+        IQueryable<TEntity> GetQueryable<TEntity>(string collection);
 
         Task<TEntity> GetFirstAsync<TEntity>(
             Expression<Func<TEntity, bool>> whereFunction,
