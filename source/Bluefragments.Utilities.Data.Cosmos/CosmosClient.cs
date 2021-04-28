@@ -261,18 +261,6 @@ namespace Bluefragments.Utilities.Data.Cosmos
             return await ExecuteTasksAsync(operations);
         }
 
-        public async Task CreateContainerIfNotExistsAsync(string collection, string partitionKey, int throughPut = 400)
-        {
-            collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
-            partitionKey.ThrowIfParameterIsNullOrWhiteSpace(nameof(partitionKey));
-
-            var database = GetDatabase();
-            await database.CreateContainerIfNotExistsAsync(
-                collection,
-                partitionKey,
-                throughPut);
-        }
-
         public async Task DeleteContainerAsync(string collection)
         {
             collection.ThrowIfParameterIsNullOrWhiteSpace(nameof(collection));
