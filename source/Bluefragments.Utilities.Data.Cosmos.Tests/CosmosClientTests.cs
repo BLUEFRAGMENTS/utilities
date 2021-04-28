@@ -34,9 +34,9 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
             cosmosClient = new CosmosClient<DataEntityBase<string>, string>(database, key, url);
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            await cosmosClient.CreateContainerIfNotExistsAsync(testCollection, "/type");
+            return Task.FromResult<object>(null);
         }
 
         public async Task DisposeAsync()
