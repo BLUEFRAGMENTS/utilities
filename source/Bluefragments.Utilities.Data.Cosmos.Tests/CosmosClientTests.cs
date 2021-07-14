@@ -61,14 +61,14 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
                 Assert.NotNull(id);
                 Assert.NotEmpty(id);
 
-                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, TestEntity.PartitionKeyName, testCollection);
 
                 Assert.NotNull(resultItem);
                 Assert.Equal(resultItem.Text, itemText);
             }
             finally
             {
-                await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
+                await cosmosClient.DeleteItemAsync(item.Id, testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -91,14 +91,14 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
                 await Assert.ThrowsAsync<ConcurrencyException>(() => cosmosClient.UpsertItemAsync(item, testCollection, "Hello"));
 
-                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, TestEntity.PartitionKeyName, testCollection);
 
                 Assert.NotNull(resultItem);
                 Assert.Equal(resultItem.Text, itemText);
             }
             finally
             {
-                await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
+                await cosmosClient.DeleteItemAsync(item.Id, testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -119,19 +119,19 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
                 Assert.NotNull(id);
                 Assert.NotEmpty(id);
 
-                var itemFromDb = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+                var itemFromDb = await cosmosClient.GetItemAsync<TestEntity>(id, TestEntity.PartitionKeyName, testCollection);
                 itemFromDb.Text = itemText;
 
                 await cosmosClient.UpsertItemAsync(itemFromDb, testCollection, itemFromDb.Etag);
 
-                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, TestEntity.PartitionKeyName, testCollection);
 
                 Assert.NotNull(resultItem);
                 Assert.Equal(resultItem.Text, itemText);
             }
             finally
             {
-                await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
+                await cosmosClient.DeleteItemAsync(item.Id, testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -155,7 +155,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
                 item.Text = itemText;
                 await cosmosClient.UpdateItemAsync(item, testCollection);
 
-                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection);
+                var resultItem = await cosmosClient.GetItemAsync<TestEntity>(id, TestEntity.PartitionKeyName, testCollection);
 
                 Assert.NotNull(resultItem);
                 Assert.Equal(resultItem.Text, itemText);
@@ -163,7 +163,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
             }
             finally
             {
-                await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
+                await cosmosClient.DeleteItemAsync(item.Id, testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -181,8 +181,8 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
             Assert.NotNull(id);
             Assert.NotEmpty(id);
 
-            await cosmosClient.DeleteItemAsync(item.Id, testCollection, item.Type);
-            await Assert.ThrowsAsync<CosmosException>(async () => await cosmosClient.GetItemAsync<TestEntity>(id, item.Type, testCollection));
+            await cosmosClient.DeleteItemAsync(item.Id, testCollection, TestEntity.PartitionKeyName);
+            await Assert.ThrowsAsync<CosmosException>(async () => await cosmosClient.GetItemAsync<TestEntity>(id, TestEntity.PartitionKeyName, testCollection));
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
             for (int i = 0; i < 2; i++)
             {
-                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -227,7 +227,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
             for (int i = 0; i < 2; i++)
             {
-                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -252,7 +252,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
             for (int i = 0; i < 2; i++)
             {
-                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -284,7 +284,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
             for (int i = 0; i < 2; i++)
             {
-                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -315,7 +315,7 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
             for (int i = 0; i < 5; i++)
             {
-                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.PartitionKeyName);
             }
         }
 
@@ -346,17 +346,16 @@ namespace Bluefragments.Utilities.Data.Cosmos.Tests
 
             for (int i = 0; i < 2; i++)
             {
-                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.TypeName);
+                await cosmosClient.DeleteItemAsync(i.ToString(), testCollection, TestEntity.PartitionKeyName);
             }
         }
 
         private class TestEntity : DataEntityBase<string>
         {
-            public const string TypeName = "testEntity";
+            public const string PartitionKeyName = "testEntity";
 
             public TestEntity()
             {
-                Type = TypeName;
             }
 
             public string Text { get; set; }
