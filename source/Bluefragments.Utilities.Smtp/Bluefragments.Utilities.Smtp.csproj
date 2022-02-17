@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.0</Version>
+    <Version>6.0.0</Version>
     <Authors>BLUEFRAGMENTS</Authors>
     <RepositoryUrl></RepositoryUrl>
     <PackageIcon>Components.png</PackageIcon>
@@ -12,10 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="SendGrid" Version="9.15.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -32,15 +28,8 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+  
   <PropertyGroup>
-    <!-- Ensure breaking rules will fail build (see also: http://stylecop.codeplex.com/wikipage?title=Setting%20Up%20StyleCop%20MSBuild%20Integration&referringTitle=Documentation) -->
-
-    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
-
-    <!-- Specify rules that configure the behaviour of StyleCop (see also https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/Configuration.md) -->
-    <CodeAnalysisRuleSet>..\bluefragments.ruleset</CodeAnalysisRuleSet>
-
-    <!-- Ensure warnins are treated as errors -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1701;1702;1705;NU1701</NoWarn>

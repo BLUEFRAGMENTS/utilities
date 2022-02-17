@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
 using Azure.Storage;
 using Azure.Storage.Files.DataLake;
@@ -8,102 +10,151 @@ using Azure.Storage.Files.DataLake.Models;
 using Bluefragments.Utilities.Extensions;
 using Newtonsoft.Json;
 
-namespace Bluefragments.Utilities.Data.DataLake
+namespace Bluefragments.Utilities.Data.DataLake;
+
+public class DataLakeClient : IDataLakeClient
 {
-    public class DataLakeClient : IDataLakeClient
+    public DataLakeClient(string storageAccountName, string storageAccountKey, string storageAccountUri)
     {
-        public DataLakeClient(string storageAccountName, string storageAccountKey, string storageAccountUri)
+        SharedKeyCredential = new StorageSharedKeyCredential(storageAccountName, storageAccountKey);
+        ServiceClient = new DataLakeServiceClient(new Uri(storageAccountUri), SharedKeyCredential);
+    }
+
+    public DataLakeClient(string connectionString)
+    {
+        ServiceClient = new DataLakeServiceClient(connectionString);
+    }
+
+    public DataLakeServiceClient ServiceClient { get; }
+
+    private StorageSharedKeyCredential SharedKeyCredential { get; }
+
+    public async Task<T> GetItemAsync<T>(string container!!, string fileName!!)
+    {
+        var fileClient = await GetFileClientAsync(container, fileName, false);
+        ArgumentNullException.ThrowIfNull(fileClient);
+
+        if (await fileClient.ExistsAsync() == false)
         {
-            SharedKeyCredential = new StorageSharedKeyCredential(storageAccountName, storageAccountKey);
-            ServiceClient = new DataLakeServiceClient(new Uri(storageAccountUri), SharedKeyCredential);
+            return default(T);
         }
 
-        public DataLakeServiceClient ServiceClient { get; }
+        var fileStream = await fileClient.OpenReadAsync();
+        using var reader = new StreamReader(fileStream);
 
-        private StorageSharedKeyCredential SharedKeyCredential { get; }
-
-        public async Task WriteBlobAsync(string container, string blobPath, string content, string fileName = null, string folder = null)
+        var fileContent = await reader.ReadToEndAsync();
+        if (fileContent != null)
         {
-            DataLakeFileSystemClient filesystem = ServiceClient.GetFileSystemClient(container);
-            var path = Path.Combine(blobPath, folder ?? DateTime.Now.ToEpochTimeSeconds().ToString(), fileName ?? string.Concat(Guid.NewGuid(), ".json"));
-
-            using var stream = content.ToStream();
-            var file = filesystem.GetFileClient(path);
-
-            await file.UploadAsync(stream);
-
-            stream.Close();
-        }
-
-        public async Task<string> ReadBlobAsync(string storageAccountBlobUri)
-        {
-            var file = new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
-            var fileContents = await file.ReadAsync();
-
-            var str = string.Empty;
-
-            using var streamReader = new StreamReader(fileContents.Value.Content);
-            str = await streamReader.ReadToEndAsync();
-
-            fileContents.Value.Content.Close();
-
-            return str;
-        }
-
-        public async Task<Stream> ReadBlobAsStreamAsync(string storageAccountBlobUri)
-        {
-            var file = new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
-            var fileContents = await file.ReadAsync();
-
-            return fileContents.Value.Content;
-        }
-
-        public DataLakeFileClient GetDataLakeFileClient(string storageAccountBlobUri)
-        {
-            return new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
-        }
-
-        public async Task<List<T>> ReadJsonlBlobAsync<T>(string storageAccountBlobUri)
-        {
-            var file = new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
-            var fileContents = await file.ReadAsync();
-
-            var result = new List<T>();
-            using (var reader = new StreamReader(fileContents.Value.Content))
+            var blobItem = JsonConvert.DeserializeObject<T>(fileContent);
+            if (blobItem != null)
             {
-                string line = null;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        result.Add(JsonConvert.DeserializeObject<T>(line));
-                    }
-                }
+                return blobItem;
+            }
+        }
+
+        return default(T);
+    }
+
+    public async Task<IEnumerable<T>> GetItemsAsync<T>(string container!!, string fileName!!)
+    {
+        var fileClient = await GetFileClientAsync(container, fileName, false);
+        ArgumentNullException.ThrowIfNull(fileClient);
+
+        if (await fileClient.ExistsAsync() == false)
+        {
+            return null;
+        }
+
+        var fileStream = await fileClient.OpenReadAsync();
+        using var reader = new StreamReader(fileStream);
+
+        var fileContent = await reader.ReadToEndAsync();
+        if (fileContent != null)
+        {
+            var blobItem = JsonConvert.DeserializeObject<IEnumerable<T>>(fileContent);
+            if (blobItem != null)
+            {
+                return blobItem;
+            }
+        }
+
+        return null;
+    }
+
+    public async Task<T> UpdateItemAsync<T>(string container!!, string fileName!!, T item)
+    {
+        var stream = GetStreamFromBlobFile(fileName, item);
+        var fileClient = await GetFileClientAsync(container, fileName, true, true);
+        await fileClient.UploadAsync(stream);
+
+        return item;
+    }
+
+    public async Task DeleteItemAsync<T>(string container!!, string fileName!!)
+    {
+        var fileSystemClient = GetFileSystemClient(container);
+        var file = fileSystemClient.GetFileClient(fileName);
+
+        await file.DeleteIfExistsAsync();
+    }
+
+    private DataLakeFileSystemClient GetFileSystemClient(string container!!)
+    {
+        return ServiceClient.GetFileSystemClient(container.ToString());
+    }
+
+    private async Task<DataLakeFileClient> GetFileClientAsync(string container!!, string fileName!!, bool ensureDirectoryExists = true, bool cleanFile = false)
+    {
+        var fileSystemClient = GetFileSystemClient(container);
+        var file = fileSystemClient.GetFileClient(fileName);
+
+        if (ensureDirectoryExists)
+        {
+            EnsureDirectoryExists(fileName);
+        }
+
+        if (cleanFile)
+        {
+            await file.DeleteIfExistsAsync();
+        }
+
+        return file;
+    }
+
+    private static Stream GetStreamFromBlobFile(string itemPath, object item)
+    {
+        ArgumentNullException.ThrowIfNull(itemPath);
+        ArgumentNullException.ThrowIfNull(item);
+
+        var stream = new MemoryStream();
+        var streamWriter = new StreamWriter(stream);
+        var jsonWriter = new JsonTextWriter(streamWriter);
+
+        var serializer = new JsonSerializer();
+        serializer.Serialize(jsonWriter, item);
+        jsonWriter.Flush();
+        streamWriter.Flush();
+        stream.Seek(0, SeekOrigin.Begin);
+
+        return stream;
+    }
+
+    private static bool EnsureDirectoryExists(string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(filePath);
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (directory != null)
+        {
+            if (Directory.Exists(directory))
+            {
+                return true;
             }
 
-            fileContents.Value.Content.Close();
-
-            return result;
+            Directory.CreateDirectory(directory);
+            return true;
         }
 
-        public async Task DeleteBlobAsync(string storageAccountBlobUri)
-        {
-            var file = new DataLakeFileClient(new Uri(storageAccountBlobUri), SharedKeyCredential);
-            await file.DeleteAsync();
-        }
-
-        public List<PathItem> GetFileSystemPathItems(string container, string path)
-        {
-            var names = new List<PathItem>();
-
-            DataLakeFileSystemClient filesystem = ServiceClient.GetFileSystemClient(container);
-
-            foreach (PathItem pathItem in filesystem.GetPaths(path))
-            {
-                names.Add(pathItem);
-            }
-
-            return names;
-        }
+        return false;
     }
 }

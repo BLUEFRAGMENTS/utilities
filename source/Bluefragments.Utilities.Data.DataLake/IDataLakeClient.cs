@@ -5,24 +5,17 @@ using System.Threading.Tasks;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Files.DataLake.Models;
 
-namespace Bluefragments.Utilities.Data.DataLake
+namespace Bluefragments.Utilities.Data.DataLake;
+
+public interface IDataLakeClient
 {
-    public interface IDataLakeClient
-    {
-        public DataLakeServiceClient ServiceClient { get; }
+    public DataLakeServiceClient ServiceClient { get; }
 
-        Task WriteBlobAsync(string container, string blobPath, string content, string fileName = null, string folder = null);
+    Task<T> GetItemAsync<T>(string container, string fileName);
 
-        Task<string> ReadBlobAsync(string storageAccountBlobUri);
+    Task<IEnumerable<T>> GetItemsAsync<T>(string container, string fileName);
 
-        Task<Stream> ReadBlobAsStreamAsync(string storageAccountBlobUri);
+    Task<T> UpdateItemAsync<T>(string container, string fileName, T item);
 
-        Task<List<T>> ReadJsonlBlobAsync<T>(string storageAccountBlobUri);
-
-        Task DeleteBlobAsync(string storageAccountBlobUri);
-
-        List<PathItem> GetFileSystemPathItems(string container, string path);
-
-        DataLakeFileClient GetDataLakeFileClient(string storageAccountBlobUri);
-    }
+    Task DeleteItemAsync<T>(string container, string fileName);
 }
