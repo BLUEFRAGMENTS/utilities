@@ -34,5 +34,5 @@ jobs:
     - name: Build project
       shell: pwsh
       run: |
-        dotnet build $PROJECT -c Release -f
+        dotnet build $PROJECT --configuration release
 
