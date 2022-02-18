@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  PROJECT: src/Administration/Administration.csproj
+  PROJECT: source/Bluefragments.Utilities/Bluefragments.Utilities.csproj
   
 jobs:
   build:
