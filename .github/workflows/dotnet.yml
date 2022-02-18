@@ -6,18 +6,39 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  PROJECT: src/Administration/Administration.csproj
+  
 jobs:
   build:
 
     runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
+    
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+        dotnet-version: '6.0.x'
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-prerelease: true
+
+    - name: Restore NuGet packages
+      shell: pwsh
+      run: |
+        dotnet restore $PROJECT
+
+    - name: Build project
+      shell: pwsh
+      run: |
+        msbuild $PROJECT -r -p:Configuration=Debug -p:TargetFramework=net6.0-windows10.0.19041
+        # Do not use
+        # dotnet build $PROJECT -c Debug -f net6.0-windows10.0.19041 --no-restore
