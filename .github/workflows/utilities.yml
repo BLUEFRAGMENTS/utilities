@@ -27,18 +27,18 @@ jobs:
         
     - name: Generate version number using date and run number
       shell: pwsh
-      id: version-creator
+      id: version
       run: |
         $buildDay = Get-Date -Format "yyyy.Mdd"
         $ver = "6.0." + $env:GITHUB_RUN_NUMBER
-        echo "::set-output name=BUILD_VERSION::$ver"
+        echo "::set-output name=APP_VERSION::$ver"
 
     - name: Restore
       run: dotnet restore Utilities.csproj
       working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build Utilities.csproj -c Release /p:Version=$BUILD_VERSION /p:AssemblyVersion=$BUILD_VERSION --no-restore
+      run: dotnet build Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=$BUILD_VERSION --no-restore
       working-directory: utilities/src/utilities
       
     - name: Pack
