@@ -8,13 +8,15 @@ on:
 
 env:
   PROJECT: Utilities.DataLake.csproj
-  DIRECTORY: utilities.data.datalake/src/Utilities.DataLake
-  PACKAGE: utilities.datalake
 
 jobs:
   build:
 
     runs-on: windows-2022
+
+    defaults:
+      run:
+        working-directory: utilities.data.datalake/src/Utilities.DataLake
 
     steps:
     - name: Checkout
@@ -57,5 +59,5 @@ jobs:
     - name: Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: package_ $PACKAGE + _ + ${{ steps.version.outputs.APP_VERSION }}
+        name: package_${{ steps.version.outputs.APP_VERSION }}
         path: "**/*.nupkg"
