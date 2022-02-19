@@ -56,4 +56,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: package_utilities_${{ steps.version.outputs.APP_VERSION }}
-        path: "**/*.nupkg"
+        path: "*.nupkg"
