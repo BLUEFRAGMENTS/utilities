@@ -56,4 +56,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: package_utilities_${{ steps.version.outputs.APP_VERSION }}
-        path: output/bin
+        path: |
+          Bluefragments.Utilities.${{ steps.version.outputs.APP_VERSION }}.nupkg
+          Bluefragments.Utilities.${{ steps.version.outputs.APP_VERSION }}.snupkg
