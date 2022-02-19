@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>Bluefragments.Utilities.DataLake</PackageId>
+    <PackageId>Bluefragments.Utilities.Data.DataLake</PackageId>
     <Authors>Bluefragments</Authors>
     <Company>BLUEFRAGMENTS</Company>
     <PackageProjectUrl>https://github.com/Bluefragments/utilities</PackageProjectUrl>

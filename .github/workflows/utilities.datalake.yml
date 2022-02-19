@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT: ./utilities.data.datalake/src/Utilities.DataLake/Utilities.DataLake.csproj
+  PROJECT: utilities.data.datalake/src/Utilities.DataLake/Utilities.DataLake.csproj
   
 jobs:
   build:
