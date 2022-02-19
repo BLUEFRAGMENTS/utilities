@@ -30,7 +30,7 @@ jobs:
       id: version-creator
       run: |
         $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = "6.0." + $env:GITHUB_RUN_NUMBER + ".0"
+        $ver = "6.0." + $env:GITHUB_RUN_NUMBER
         echo "::set-output name=BUILD_VERSION::$ver"
 
     - name: Restore
