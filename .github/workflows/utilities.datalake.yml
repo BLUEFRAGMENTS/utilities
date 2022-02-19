@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  PROJECT: ../../utilities.data.datalake/utilities datalake.sln
-  
 jobs:
   build:
 
@@ -25,7 +22,9 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Restore
-      run: dotnet restore $PROJECT
+      run: dotnet restore Utilities.DataLake.csproj
+      working-directory: utilities.data.datalake/src/Utilities.DataLake
 
     - name: Build
-      run: dotnet build $PROJECT --configuration Release --no-restore
+      run: dotnet build Utilities.DataLake.csproj --configuration Release --no-restore
+      working-directory: utilities.data.datalake/src/Utilities.DataLake
