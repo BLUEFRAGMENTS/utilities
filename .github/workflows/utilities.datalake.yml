@@ -57,5 +57,5 @@ jobs:
       with:
         name: package_utilities.datalake_${{ steps.version.outputs.APP_VERSION }}
         path: |
-            "**/*.nupkg"
-            "**/*.snupkg"
+          path/output/bin/*.nupkg
+          path/output/bin/*.snupkg
