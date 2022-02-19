@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT: utilities.data.datalake/utilities datalake.sln
+  PROJECT: ../../utilities.data.datalake/utilities datalake.sln
   
 jobs:
   build:
