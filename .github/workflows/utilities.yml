@@ -44,7 +44,14 @@ jobs:
     - name: Pack
       run: dotnet pack Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
       working-directory: utilities/src/utilities
-      
+
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
       working-directory: utilities/src/utilities
+
+    - name: Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: "**/*.nupkg"
+      
