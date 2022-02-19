@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT: utilities/utilities.sln
+  PROJECT: ./utilities/utilities.sln
   
 jobs:
   build:
