@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  PROJECT: Utilities.csproj
+  DIRECTORY: utilities/src/utilities
+  PACKAGE: utilities
+
 jobs:
   build:
 
@@ -34,24 +39,23 @@ jobs:
         echo "::set-output name=APP_VERSION::$ver"
 
     - name: Restore
-      run: dotnet restore Utilities.csproj
-      working-directory: utilities/src/utilities
+      run: dotnet restore $PROJECT
+      working-directory: $DIRECTORY
 
     - name: Build
-      run: dotnet build Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=${{ steps.version.outputs.APP_VERSION }} --no-restore
-      working-directory: utilities/src/utilities
+      run: dotnet build $PROJECT -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=${{ steps.version.outputs.APP_VERSION }} --no-restore
+      working-directory: $DIRECTORY
       
     - name: Pack
-      run: dotnet pack Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
-      working-directory: utilities/src/utilities
+      run: dotnet pack $PROJECT -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      working-directory: $DIRECTORY
 
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-      working-directory: utilities/src/utilities
+      working-directory: $DIRECTORY
 
     - name: Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: package + ${{ steps.version.outputs.APP_VERSION }}
+        name: package_ $PACKAGE + _ + ${{ steps.version.outputs.APP_VERSION }}
         path: "**/*.nupkg"
-      

@@ -6,38 +6,56 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  PROJECT: Utilities.DataLake.csproj
+  DIRECTORY: utilities.data.datalake/src/Utilities.DataLake
+  PACKAGE: utilities.datalake
+
 jobs:
   build:
 
     runs-on: windows-2022
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '6.0.x'
-
+        
     - name: Generate version number using date and run number
       shell: pwsh
-      id: version-creator
+      id: version
       run: |
         $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = "6.0." + $env:GITHUB_RUN_NUMBER + ".0"
-        echo "::set-output name=BUILD_VERSION::$ver"
-        echo $BUILD_VERSION
+        $ver = "6.0." + $env:GITHUB_RUN_NUMBER
+        echo "::set-output name=APP_VERSION::$ver"
 
     - name: Restore
-      run: dotnet restore Utilities.DataLake.csproj
-      working-directory: utilities.data.datalake/src/Utilities.DataLake
+      run: dotnet restore $PROJECT
+      working-directory: $DIRECTORY
 
     - name: Build
-      run: dotnet build Utilities.DataLake.csproj --configuration Release --no-restore -p:Version=$BUILD_VERSION
-      working-directory: utilities.data.datalake/src/Utilities.DataLake
+      run: dotnet build $PROJECT -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=${{ steps.version.outputs.APP_VERSION }} --no-restore
+      working-directory: $DIRECTORY
       
-    - name: Publish
-      if: startsWith(github.ref, 'refs/heads/release')
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+    - name: Pack
+      run: dotnet pack $PROJECT -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      working-directory: $DIRECTORY
+
+    - name: Push to NuGet
+      run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+      working-directory: $DIRECTORY
+      
+    - name: Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: package_ $PACKAGE + _ + ${{ steps.version.outputs.APP_VERSION }}
+        path: "**/*.nupkg"
