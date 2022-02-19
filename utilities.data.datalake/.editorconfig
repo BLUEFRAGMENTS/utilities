@@ -198,6 +198,9 @@ csharp_style_prefer_index_operator = true:suggestion
 csharp_style_prefer_range_operator = true:suggestion
 csharp_style_prefer_method_group_conversion = true:silent
 
+# CS8604: Possible null reference argument.
+dotnet_diagnostic.CS8604.severity = none
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

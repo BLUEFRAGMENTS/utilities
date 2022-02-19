@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq.Expressions;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure.Storage;
+﻿using Azure.Storage;
 using Azure.Storage.Files.DataLake;
-using Azure.Storage.Files.DataLake.Models;
 using Newtonsoft.Json;
 
 namespace Utilities.Data.DataLake;
@@ -28,8 +21,11 @@ public class DataLakeClient : IDataLakeClient
 
     private StorageSharedKeyCredential SharedKeyCredential { get; }
 
-    public async Task<T> GetItemAsync<T>(string container!!, string fileName!!)
+    public async Task<T> GetItemAsync<T>(string container, string fileName)
     {
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(fileName);
+
         var fileClient = await GetFileClientAsync(container, fileName, false);
         ArgumentNullException.ThrowIfNull(fileClient);
 
@@ -54,8 +50,11 @@ public class DataLakeClient : IDataLakeClient
         return default(T);
     }
 
-    public async Task<IEnumerable<T>> GetItemsAsync<T>(string container!!, string fileName!!)
+    public async Task<IEnumerable<T>> GetItemsAsync<T>(string container, string fileName)
     {
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(fileName);
+
         var fileClient = await GetFileClientAsync(container, fileName, false);
         ArgumentNullException.ThrowIfNull(fileClient);
 
@@ -80,8 +79,12 @@ public class DataLakeClient : IDataLakeClient
         return null;
     }
 
-    public async Task<T> UpdateItemAsync<T>(string container!!, string fileName!!, T item)
+    public async Task<T> UpdateItemAsync<T>(string container, string fileName, T item)
     {
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(fileName);
+        ArgumentNullException.ThrowIfNull(item);
+
         var stream = GetStreamFromBlobFile(fileName, item);
         var fileClient = await GetFileClientAsync(container, fileName, true, true);
         await fileClient.UploadAsync(stream);
@@ -89,20 +92,23 @@ public class DataLakeClient : IDataLakeClient
         return item;
     }
 
-    public async Task DeleteItemAsync<T>(string container!!, string fileName!!)
+    public async Task DeleteItemAsync<T>(string container, string fileName)
     {
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(fileName);
+
         var fileSystemClient = GetFileSystemClient(container);
         var file = fileSystemClient.GetFileClient(fileName);
 
         await file.DeleteIfExistsAsync();
     }
 
-    private DataLakeFileSystemClient GetFileSystemClient(string container!!)
+    private DataLakeFileSystemClient GetFileSystemClient(string container)
     {
         return ServiceClient.GetFileSystemClient(container.ToString());
     }
 
-    private async Task<DataLakeFileClient> GetFileClientAsync(string container!!, string fileName!!, bool ensureDirectoryExists = true, bool cleanFile = false)
+    private async Task<DataLakeFileClient> GetFileClientAsync(string container, string fileName, bool ensureDirectoryExists = true, bool cleanFile = false)
     {
         var fileSystemClient = GetFileSystemClient(container);
         var file = fileSystemClient.GetFileClient(fileName);
