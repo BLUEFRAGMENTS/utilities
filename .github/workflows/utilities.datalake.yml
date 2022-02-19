@@ -55,5 +55,5 @@ jobs:
     - name: Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: package_${{ steps.version.outputs.APP_VERSION }}
+        name: package_utilities_datalake_${{ steps.version.outputs.APP_VERSION }}
         path: "**/*.nupkg"
