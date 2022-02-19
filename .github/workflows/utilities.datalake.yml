@@ -42,19 +42,15 @@ jobs:
 
     - name: Restore
       run: dotnet restore $PROJECT
-      working-directory: $DIRECTORY
 
     - name: Build
       run: dotnet build $PROJECT -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=${{ steps.version.outputs.APP_VERSION }} --no-restore
-      working-directory: $DIRECTORY
       
     - name: Pack
       run: dotnet pack $PROJECT -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
-      working-directory: $DIRECTORY
 
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-      working-directory: $DIRECTORY
       
     - name: Artifacts
       uses: actions/upload-artifact@v2
