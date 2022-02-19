@@ -1,0 +1,31 @@
+name: utilities
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PROJECT: ./utilities/src/Utilities/Utilities.csproj
+  
+jobs:
+  build:
+
+    runs-on: windows-2022
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore
+      run: dotnet restore $PROJECT
+
+    - name: Build
+      run: dotnet build $PROJECT --configuration Release --no-restore
