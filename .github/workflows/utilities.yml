@@ -24,21 +24,22 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '6.0.x'
-
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
+        
+    - name: Generate version number using date and run number
+      shell: pwsh
+      id: version-creator
+      run: |
+        $buildDay = Get-Date -Format "yyyy.Mdd"
+        $ver = "6.0." + $env:GITHUB_RUN_NUMBER + ".0"
+        echo "::set-output name=BUILD_VERSION::$ver"
+        echo $BUILD_VERSION
 
     - name: Restore
       run: dotnet restore Utilities.csproj
       working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build Utilities.csproj -c Release /p:Version=$GITVERSION_SEMVER /p:AssemblyVersion=$GITVERSION_SEMVER /p:InformationalVersion=$GITVERSION_SEMVER --no-restore
+      run: dotnet build Utilities.csproj -c Release /p:Version=$BUILD_VERSION /p:AssemblyVersion=$BUILD_VERSION --no-restore
       working-directory: utilities/src/utilities
       
     - name: Pack

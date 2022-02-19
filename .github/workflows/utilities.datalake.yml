@@ -26,8 +26,9 @@ jobs:
       id: version-creator
       run: |
         $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
+        $ver = "6.0." + $env:GITHUB_RUN_NUMBER + ".0"
         echo "::set-output name=BUILD_VERSION::$ver"
+        echo $BUILD_VERSION
 
     - name: Restore
       run: dotnet restore Utilities.DataLake.csproj
