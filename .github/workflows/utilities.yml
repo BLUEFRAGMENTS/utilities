@@ -32,7 +32,7 @@ jobs:
       with:
         dotnet-version: '6.0.x'
         
-    - name: Generate version number using date and run number
+    - name: Version
       shell: pwsh
       id: version
       run: |
@@ -56,4 +56,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: package_utilities_${{ steps.version.outputs.APP_VERSION }}
-        path: "*.nupkg"
+        path: "./*.nupkg"
