@@ -38,7 +38,7 @@ jobs:
       working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build Utilities.csproj -c Release -p:Version=$BUILD_VERSION -p:AssemblyVersion=$BUILD_VERSION -p:InformationalVersion=$BUILD_VERSION --no-restore
+      run: dotnet build Utilities.csproj -c Release /p:Version=$GITVERSION_SEMVER /p:AssemblyVersion=$GITVERSION_SEMVER /p:InformationalVersion=$GITVERSION_SEMVER --no-restore
       working-directory: utilities/src/utilities
       
     - name: Pack
