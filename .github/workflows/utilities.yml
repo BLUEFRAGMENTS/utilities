@@ -38,11 +38,11 @@ jobs:
       working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=$BUILD_VERSION --no-restore
+      run: dotnet build Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} /p:AssemblyVersion=${{ steps.version.outputs.APP_VERSION }} --no-restore
       working-directory: utilities/src/utilities
       
     - name: Pack
-      run: dotnet pack Utilities.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      run: dotnet pack Utilities.csproj -c Release /p:Version=${{ steps.version.outputs.APP_VERSION }} --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
       working-directory: utilities/src/utilities
       
     - name: Push to NuGet
