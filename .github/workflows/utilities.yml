@@ -22,10 +22,22 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
+    - name: Generate version number using date and run number
+      shell: pwsh
+      id: version-creator
+      run: |
+        $buildDay = Get-Date -Format "yyyy.Mdd"
+        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
+        echo "::set-output name=APP_VERSION::$ver"
+
     - name: Restore
       run: dotnet restore Utilities.csproj
       working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build Utilities.csproj --configuration Release --no-restore
+      run: dotnet build Utilities.csproj --configuration Release --no-restore -p:Version=$BUILD_VERSION
       working-directory: utilities/src/utilities
+
+    - name: Publish
+      if: startsWith(github.ref, 'refs/heads/release')
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
