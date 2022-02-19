@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  PROJECT: '../../utilities/src/Utilities/Utilities.csproj'
-  
 jobs:
   build:
 
@@ -26,7 +23,9 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Restore
-      run: dotnet restore $PROJECT
+      run: dotnet restore Utilities.csproj
+      working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build $PROJECT --configuration Release --no-restore
+      run: dotnet build Utilities.csproj --configuration Release --no-restore
+      working-directory: utilities/src/utilities
