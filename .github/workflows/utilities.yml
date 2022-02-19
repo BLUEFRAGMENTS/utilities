@@ -25,22 +25,25 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
+    - name: Generate version number using date and run number
+      shell: pwsh
+      id: version-creator
+      run: |
+        $buildDay = Get-Date -Format "yyyy.Mdd"
+        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
+        echo "::set-output name=BUILD_VERSION::$ver"
 
     - name: Restore
       run: dotnet restore Utilities.csproj
       working-directory: utilities/src/utilities
 
     - name: Build
-      run: dotnet build Utilities.csproj --configuration Release -p:Version=$GITVERSION_SEMVER --no-restore
+      run: dotnet build Utilities.csproj --configuration Release --no-restore
+      working-directory: utilities/src/utilities
+      
+    - name: Pack
+      run: dotnet pack Utilities.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
       working-directory: utilities/src/utilities
 
-    - name: Publish
-      if: startsWith(github.ref, 'refs/heads/release')
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+    - name: Push to NuGet
+      run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
