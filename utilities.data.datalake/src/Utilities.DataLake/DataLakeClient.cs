@@ -86,8 +86,8 @@ public class DataLakeClient : IDataLakeClient
         ArgumentNullException.ThrowIfNull(item);
 
         var stream = GetStreamFromBlobFile(fileName, item);
-        var fileClient = await GetFileClientAsync(container, fileName, true, true);
-        await fileClient.UploadAsync(stream);
+        var fileClient = await GetFileClientAsync(container, fileName, true, false);
+        await fileClient.UploadAsync(stream, overwrite: true);
 
         return item;
     }
